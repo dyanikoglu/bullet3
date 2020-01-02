@@ -149,8 +149,7 @@ btScalar btNNCGConstraintSolver::solveSingleIteration(int iteration, btCollision
 
 					{
 						const btSolverConstraint& solveManifold = m_tmpSolverContactConstraintPool[m_orderTmpConstraintPool[c]];
-						btScalar deltaf = resolveSingleConstraintRowLowerLimit(m_tmpSolverBodyPool[solveManifold.m_solverBodyIdA], m_tmpSolverBodyPool[solveManifold.m_solverBodyIdB], solveManifold,
-							static_cast<btManifoldPoint*>(solveManifold.m_originalContactPoint));
+						btScalar deltaf = resolveSingleConstraintRowLowerLimit(m_tmpSolverBodyPool[solveManifold.m_solverBodyIdA], m_tmpSolverBodyPool[solveManifold.m_solverBodyIdB], solveManifold);
 						m_deltafC[c] = deltaf;
 						deltaflengthsqr += deltaf * deltaf;
 						totalImpulse = solveManifold.m_appliedImpulse;
@@ -205,8 +204,7 @@ btScalar btNNCGConstraintSolver::solveSingleIteration(int iteration, btCollision
 				{
 					const btSolverConstraint& solveManifold = m_tmpSolverContactConstraintPool[m_orderTmpConstraintPool[j]];
 					//resolveSingleConstraintRowLowerLimitSIMD(m_tmpSolverBodyPool[solveManifold.m_solverBodyIdA],m_tmpSolverBodyPool[solveManifold.m_solverBodyIdB],solveManifold);
-					btScalar deltaf = resolveSingleConstraintRowLowerLimit(m_tmpSolverBodyPool[solveManifold.m_solverBodyIdA], m_tmpSolverBodyPool[solveManifold.m_solverBodyIdB], solveManifold,
-						static_cast<btManifoldPoint*>(solveManifold.m_originalContactPoint));
+					btScalar deltaf = resolveSingleConstraintRowLowerLimit(m_tmpSolverBodyPool[solveManifold.m_solverBodyIdA], m_tmpSolverBodyPool[solveManifold.m_solverBodyIdB], solveManifold);
 					m_deltafC[j] = deltaf;
 					deltaflengthsqr += deltaf * deltaf;
 				}
