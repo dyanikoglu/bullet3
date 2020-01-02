@@ -32,7 +32,7 @@ void btStaticPlaneShape::getAabb(const btTransform& t, btVector3& aabbMin, btVec
 {
 	(void)t;
 	/*
-	btVector3 infvec (btScalar(BT_LARGE_FLOAT),btScalar(BT_LARGE_FLOAT),btScalar(BT_LARGE_FLOAT));
+	btVector3 infvec (btScalar(BT_LARGE_FLOAT), btScalar(BT_LARGE_FLOAT), btScalar(BT_LARGE_FLOAT));
 
 	btVector3 center = m_planeNormal*m_planeConstant;
 	aabbMin = center + infvec*m_planeNormal;

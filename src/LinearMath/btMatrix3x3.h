@@ -21,15 +21,10 @@ subject to the following restrictions:
 
 #ifdef BT_USE_SSE
 //const __m128 ATTRIBUTE_ALIGNED16(v2220) = {2.0f, 2.0f, 2.0f, 0.0f};
-//const __m128 ATTRIBUTE_ALIGNED16(vMPPP) = {-0.0f, +0.0f, +0.0f, +0.0f};
-#define vMPPP (_mm_set_ps(+0.0f, +0.0f, +0.0f, -0.0f))
+const __m128 ATTRIBUTE_ALIGNED16(vMPPP) = {-0.0f, +0.0f, +0.0f, +0.0f};
 #endif
 
-#if defined(BT_USE_SSE)
-#define v1000 (_mm_set_ps(0.0f, 0.0f, 0.0f, 1.0f))
-#define v0100 (_mm_set_ps(0.0f, 0.0f, 1.0f, 0.0f))
-#define v0010 (_mm_set_ps(0.0f, 1.0f, 0.0f, 0.0f))
-#elif defined(BT_USE_NEON)
+#if defined(BT_USE_SSE) || defined(BT_USE_NEON)
 const btSimdFloat4 ATTRIBUTE_ALIGNED16(v1000) = {1.0f, 0.0f, 0.0f, 0.0f};
 const btSimdFloat4 ATTRIBUTE_ALIGNED16(v0100) = {0.0f, 1.0f, 0.0f, 0.0f};
 const btSimdFloat4 ATTRIBUTE_ALIGNED16(v0010) = {0.0f, 0.0f, 1.0f, 0.0f};
@@ -117,6 +112,13 @@ public:
 		m_el[2] = other.m_el[2];
 	}
 
+	SIMD_FORCE_INLINE btMatrix3x3(const btVector3& v0, const btVector3& v1, const btVector3& v2)
+	{
+		m_el[0] = v0;
+		m_el[1] = v1;
+		m_el[2] = v2;
+	}
+
 	/** @brief Assignment Operator */
 	SIMD_FORCE_INLINE btMatrix3x3& operator=(const btMatrix3x3& other)
 	{
@@ -125,13 +127,6 @@ public:
 		m_el[2] = other.m_el[2];
 		return *this;
 	}
-    
-    SIMD_FORCE_INLINE btMatrix3x3(const btVector3& v0, const btVector3& v1, const btVector3& v2)
-    {
-        m_el[0] = v0;
-        m_el[1] = v1;
-        m_el[2] = v2;
-    }
 
 #endif
 
@@ -140,6 +135,18 @@ public:
 	SIMD_FORCE_INLINE btVector3 getColumn(int i) const
 	{
 		return btVector3(m_el[0][i], m_el[1][i], m_el[2][i]);
+	}
+
+	/**
+	* @brief Set a column of the matrix with a vector
+	* @param i Column number
+	* @param vec Input data
+	*/
+	SIMD_FORCE_INLINE void setColumn(int i, const btVector3& vec)
+	{
+		m_el[0][i] = vec[0];
+		m_el[1][i] = vec[1];
+		m_el[2][i] = vec[2];
 	}
 
 	/** @brief Get a row of the matrix as a vector 

@@ -17,6 +17,8 @@ subject to the following restrictions:
  * @mainpage Bullet Documentation
  *
  * @section intro_sec Introduction
+ * Bullet Collision Detection & Physics SDK
+ *
  * Bullet is a Collision Detection and Rigid Body Dynamics Library. The Library is Open Source and free for commercial use, under the ZLib license ( http://opensource.org/licenses/zlib-license.php ).
  *
  * The main documentation is Bullet_User_Manual.pdf, included in the source code distribution.
@@ -152,7 +154,7 @@ public:
 		m_debugDrawer = debugDrawer;
 	}
 
-	virtual btIDebugDraw* getDebugDrawer()
+	virtual btIDebugDraw* getDebugDrawer() const
 	{
 		return m_debugDrawer;
 	}
@@ -324,6 +326,7 @@ public:
 		btVector3 m_hitNormalLocal;
 		btVector3 m_hitPointLocal;
 		btScalar m_hitFraction;
+		btScalar m_penetrationDist;  // How far the last cast penetrated the object (neg means penetrated)
 	};
 
 	///RayResultCallback is used to report new raycast results
@@ -373,11 +376,12 @@ public:
 
 		btVector3 m_hitNormalWorld;
 		btVector3 m_hitPointWorld;
+		btScalar m_penetrationDist;  // How far the last cast penetrated the object + allowed penetration (neg means penetrated)
 		const btCollisionObject* m_hitCollisionObject;
 
 		virtual btScalar addSingleResult(LocalConvexResult& convexResult, bool normalInWorldSpace)
 		{
-			//caller already does the filter on the m_closestHitFraction
+			// caller already does the filter on the m_closestHitFraction
 			btAssert(convexResult.m_hitFraction <= m_closestHitFraction);
 
 			m_closestHitFraction = convexResult.m_hitFraction;
@@ -392,6 +396,7 @@ public:
 				m_hitNormalWorld = m_hitCollisionObject->getWorldTransform().getBasis() * convexResult.m_hitNormalLocal;
 			}
 			m_hitPointWorld = convexResult.m_hitPointLocal;
+			m_penetrationDist = convexResult.m_penetrationDist;
 			return convexResult.m_hitFraction;
 		}
 	};
@@ -452,11 +457,13 @@ public:
 							  btCollisionObject* collisionObject,
 							  const btCollisionShape* collisionShape,
 							  const btTransform& colObjWorldTransform,
-							  RayResultCallback& resultCallback);
+							  RayResultCallback& resultCallback,
+							  btIDebugDraw* debugDraw = NULL);
 
 	static void rayTestSingleInternal(const btTransform& rayFromTrans, const btTransform& rayToTrans,
 									  const btCollisionObjectWrapper* collisionObjectWrap,
-									  RayResultCallback& resultCallback);
+									  RayResultCallback& resultCallback,
+									  btIDebugDraw* debugDraw = NULL);
 
 	/// objectQuerySingle performs a collision detection query and calls the resultCallback. It is used internally by rayTest.
 	static void objectQuerySingle(const btConvexShape* castShape, const btTransform& rayFromTrans, const btTransform& rayToTrans,

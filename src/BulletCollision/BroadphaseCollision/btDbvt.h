@@ -709,30 +709,30 @@ DBVT_INLINE int Select(const btDbvtAabbMm& o,
 	ATTRIBUTE_ALIGNED16(__int32 r[1]);
 	__asm
 	{
-		mov		eax,o
-			mov		ecx,a
-			mov		edx,b
+		mov		eax, o
+			mov		ecx, a
+			mov		edx, b
 			movaps	xmm0,[eax]
-		movaps	xmm5,mask
+		movaps	xmm5, mask
 			addps	xmm0,[eax+16]	
 		movaps	xmm1,[ecx]
 		movaps	xmm2,[edx]
 		addps	xmm1,[ecx+16]
 		addps	xmm2,[edx+16]
-		subps	xmm1,xmm0
-			subps	xmm2,xmm0
-			andps	xmm1,xmm5
-			andps	xmm2,xmm5
-			movhlps	xmm3,xmm1
-			movhlps	xmm4,xmm2
-			addps	xmm1,xmm3
-			addps	xmm2,xmm4
-			pshufd	xmm3,xmm1,1
-			pshufd	xmm4,xmm2,1
-			addss	xmm1,xmm3
-			addss	xmm2,xmm4
-			cmpless	xmm2,xmm1
-			movss	r,xmm2
+		subps	xmm1, xmm0
+			subps	xmm2, xmm0
+			andps	xmm1, xmm5
+			andps	xmm2, xmm5
+			movhlps	xmm3, xmm1
+			movhlps	xmm4, xmm2
+			addps	xmm1, xmm3
+			addps	xmm2, xmm4
+			pshufd	xmm3, xmm1,1
+			pshufd	xmm4, xmm2,1
+			addss	xmm1, xmm3
+			addss	xmm2, xmm4
+			cmpless	xmm2, xmm1
+			movss	r, xmm2
 	}
 	return (r[0] & 1);
 #endif
@@ -1090,10 +1090,10 @@ inline void		btDbvt::collideTT(	const btDbvtNode* root0,
 			int								treshold=DOUBLE_STACKSIZE-4;
 			btAlignedObjectArray<sStkNN>	stkStack;
 			stkStack.resize(DOUBLE_STACKSIZE);
-			stkStack[0]=sStkNN(root0,root1);
+			stkStack[0]=sStkNN(root0, root1);
 			do	{
 				sStkNN	p=stkStack[--depth];
-				if(Intersect(p.a->volume,p.b->volume,xform))
+				if(Intersect(p.a->volume, p.b->volume, xform))
 				{
 					if(depth>treshold)
 					{
@@ -1104,27 +1104,27 @@ inline void		btDbvt::collideTT(	const btDbvtNode* root0,
 					{
 						if(p.b->isinternal())
 						{					
-							stkStack[depth++]=sStkNN(p.a->childs[0],p.b->childs[0]);
-							stkStack[depth++]=sStkNN(p.a->childs[1],p.b->childs[0]);
-							stkStack[depth++]=sStkNN(p.a->childs[0],p.b->childs[1]);
-							stkStack[depth++]=sStkNN(p.a->childs[1],p.b->childs[1]);
+							stkStack[depth++]=sStkNN(p.a->childs[0], p.b->childs[0]);
+							stkStack[depth++]=sStkNN(p.a->childs[1], p.b->childs[0]);
+							stkStack[depth++]=sStkNN(p.a->childs[0], p.b->childs[1]);
+							stkStack[depth++]=sStkNN(p.a->childs[1], p.b->childs[1]);
 						}
 						else
 						{
-							stkStack[depth++]=sStkNN(p.a->childs[0],p.b);
-							stkStack[depth++]=sStkNN(p.a->childs[1],p.b);
+							stkStack[depth++]=sStkNN(p.a->childs[0], p.b);
+							stkStack[depth++]=sStkNN(p.a->childs[1], p.b);
 						}
 					}
 					else
 					{
 						if(p.b->isinternal())
 						{
-							stkStack[depth++]=sStkNN(p.a,p.b->childs[0]);
-							stkStack[depth++]=sStkNN(p.a,p.b->childs[1]);
+							stkStack[depth++]=sStkNN(p.a, p.b->childs[0]);
+							stkStack[depth++]=sStkNN(p.a, p.b->childs[1]);
 						}
 						else
 						{
-							policy.Process(p.a,p.b);
+							policy.Process(p.a, p.b);
 						}
 					}
 				}
@@ -1140,7 +1140,7 @@ inline void		btDbvt::collideTT(	const btDbvtNode* root0,
 								  DBVT_IPOLICY)
 {
 	const btTransform	xform=xform0.inverse()*xform1;
-	collideTT(root0,root1,xform,policy);
+	collideTT(root0, root1, xform, policy);
 }
 #endif
 
@@ -1282,7 +1282,8 @@ inline void btDbvt::rayTest(const btDbvtNode* root,
 	if (root)
 	{
 		btVector3 rayDir = (rayTo - rayFrom);
-		rayDir.normalize();
+		if (!btFuzzyZero(rayDir.length2()))
+			rayDir.normalize();
 
 		///what about division by zero? --> just set rayDirection[i] to INF/BT_LARGE_FLOAT
 		btVector3 rayDirectionInverse;

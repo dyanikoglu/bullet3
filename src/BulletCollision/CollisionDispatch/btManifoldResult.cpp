@@ -18,6 +18,8 @@ subject to the following restrictions:
 #include "BulletCollision/CollisionDispatch/btCollisionObject.h"
 #include "BulletCollision/CollisionDispatch/btCollisionObjectWrapper.h"
 
+#include "BulletCollision/CollisionShapes/btCollisionShape.h"
+
 ///This is to allow MaterialCombiner/Custom Friction/Restitution values
 ContactAddedCallback gContactAddedCallback = 0;
 
@@ -107,8 +109,8 @@ void btManifoldResult::addContactPoint(const btVector3& normalOnBInWorld, const 
 	btAssert(m_manifoldPtr);
 	//order in manifold needs to match
 
+	//	if (depth > m_manifoldPtr->getContactProcessingThreshold())
 	if (depth > m_manifoldPtr->getContactBreakingThreshold())
-		//	if (depth > m_manifoldPtr->getContactProcessingThreshold())
 		return;
 
 	bool isSwapped = m_manifoldPtr->getBody0() != m_body0Wrap->getCollisionObject();
@@ -172,7 +174,8 @@ void btManifoldResult::addContactPoint(const btVector3& normalOnBInWorld, const 
 		newPt.m_index0 = m_index0;
 		newPt.m_index1 = m_index1;
 	}
-	//printf("depth=%f\n",depth);
+
+	//printf("depth=%f\n", depth);
 	///@todo, check this for any side effects
 	if (insertIndex >= 0)
 	{
@@ -185,6 +188,7 @@ void btManifoldResult::addContactPoint(const btVector3& normalOnBInWorld, const 
 	}
 
 	//User can override friction and/or restitution
+	// TODO: This if block was disabled because of previous obsolte thread implementation.
 	if (gContactAddedCallback &&
 		//and if either of the two bodies requires custom material
 		((m_body0Wrap->getCollisionObject()->getCollisionFlags() & btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK) ||

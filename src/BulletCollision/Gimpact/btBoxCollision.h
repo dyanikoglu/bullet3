@@ -68,7 +68,7 @@ enum eBT_PLANE_INTERSECTION_TYPE
 //	//find minmax
 //	if(pmin>pmax)
 //	{
-//		BT_SWAP_NUMBERS(pmin,pmax);
+//		BT_SWAP_NUMBERS(pmin, pmax);
 //	}
 //	//find extends
 //	const btScalar rad = extend[component_index0] * absolute_edge[dir_index0] +
@@ -85,7 +85,7 @@ enum eBT_PLANE_INTERSECTION_TYPE
 //	const btVector3 & pointb, btVector3 & extend)
 //{
 //
-//	return test_cross_edge_box(edge,absolute_edge,pointa,pointb,extend,2,1,1,2);
+//	return test_cross_edge_box(edge, absolute_edge, pointa, pointb, extend,2,1,1,2);
 //}
 //
 //
@@ -96,7 +96,7 @@ enum eBT_PLANE_INTERSECTION_TYPE
 //	const btVector3 & pointb, btVector3 & extend)
 //{
 //
-//	return test_cross_edge_box(edge,absolute_edge,pointa,pointb,extend,0,2,2,0);
+//	return test_cross_edge_box(edge, absolute_edge, pointa, pointb, extend,0,2,2,0);
 //}
 //
 //SIMD_FORCE_INLINE bool test_cross_edge_box_Z_axis(
@@ -106,7 +106,7 @@ enum eBT_PLANE_INTERSECTION_TYPE
 //	const btVector3 & pointb, btVector3 & extend)
 //{
 //
-//	return test_cross_edge_box(edge,absolute_edge,pointa,pointb,extend,1,0,0,1);
+//	return test_cross_edge_box(edge, absolute_edge, pointa, pointb, extend,1,0,0,1);
 //}
 
 #define TEST_CROSS_EDGE_BOX_MCR(edge, absolute_edge, pointa, pointb, _extend, i_dir_0, i_dir_1, i_comp_0, i_comp_1) \

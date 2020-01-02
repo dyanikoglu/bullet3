@@ -17,12 +17,12 @@ subject to the following restrictions:
 #define BT_DISPATCHER_H
 #include "LinearMath/btScalar.h"
 
-class btCollisionAlgorithm;
 struct btBroadphaseProxy;
+struct btCollisionObjectWrapper;
+class btCollisionAlgorithm;
 class btRigidBody;
 class btCollisionObject;
 class btOverlappingPairCache;
-struct btCollisionObjectWrapper;
 
 class btPersistentManifold;
 class btPoolAllocator;

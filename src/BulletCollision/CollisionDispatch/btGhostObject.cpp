@@ -21,6 +21,7 @@ subject to the following restrictions:
 btGhostObject::btGhostObject()
 {
 	m_internalType = CO_GHOST_OBJECT;
+	m_callback = NULL;
 }
 
 btGhostObject::~btGhostObject()
@@ -39,6 +40,9 @@ void btGhostObject::addOverlappingObjectInternal(btBroadphaseProxy* otherProxy, 
 	{
 		//not found
 		m_overlappingObjects.push_back(otherObject);
+
+		if (m_callback)
+			m_callback->addedOverlappingObject(otherObject);
 	}
 }
 
@@ -51,6 +55,9 @@ void btGhostObject::removeOverlappingObjectInternal(btBroadphaseProxy* otherProx
 	{
 		m_overlappingObjects[index] = m_overlappingObjects[m_overlappingObjects.size() - 1];
 		m_overlappingObjects.pop_back();
+
+		if (m_callback)
+			m_callback->removedOverlappingObject(otherObject);
 	}
 }
 

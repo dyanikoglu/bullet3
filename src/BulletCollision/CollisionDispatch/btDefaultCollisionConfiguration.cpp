@@ -35,7 +35,7 @@ subject to the following restrictions:
 #include "LinearMath/btPoolAllocator.h"
 
 btDefaultCollisionConfiguration::btDefaultCollisionConfiguration(const btDefaultCollisionConstructionInfo& constructionInfo)
-//btDefaultCollisionConfiguration::btDefaultCollisionConfiguration(btStackAlloc*	stackAlloc,btPoolAllocator*	persistentManifoldPool,btPoolAllocator*	collisionAlgorithmPool)
+//btDefaultCollisionConfiguration::btDefaultCollisionConfiguration(btStackAlloc*	stackAlloc, btPoolAllocator*	persistentManifoldPool, btPoolAllocator*	collisionAlgorithmPool)
 {
 	void* mem = NULL;
 	if (constructionInfo.m_useEpaPenetrationAlgorithm)

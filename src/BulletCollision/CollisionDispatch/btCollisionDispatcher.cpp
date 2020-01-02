@@ -53,6 +53,8 @@ btCollisionDispatcher::btCollisionDispatcher(btCollisionConfiguration* collision
 
 void btCollisionDispatcher::registerCollisionCreateFunc(int proxyType0, int proxyType1, btCollisionAlgorithmCreateFunc* createFunc)
 {
+	// TODO: Is this assert really required?
+	btAssert(proxyType0 < MAX_BROADPHASE_COLLISION_TYPES && proxyType1 < MAX_BROADPHASE_COLLISION_TYPES);
 	m_doubleDispatchContactPoints[proxyType0][proxyType1] = createFunc;
 }
 

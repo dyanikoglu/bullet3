@@ -42,7 +42,7 @@ SIMD_FORCE_INLINE void bt_edge_plane(const btVector3 &e1, const btVector3 &e2, c
 
 //***************** SEGMENT and LINE FUNCTIONS **********************************///
 
-/*! Finds the closest point(cp) to (v) on a segment (e1,e2)
+/*! Finds the closest point(cp) to (v) on a segment (e1, e2)
  */
 SIMD_FORCE_INLINE void bt_closest_point_on_segment(
 	btVector3 &cp, const btVector3 &v,

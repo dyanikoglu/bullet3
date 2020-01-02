@@ -284,9 +284,11 @@ protected:
 protected:
 	void buildTree(int startIndex, int endIndex);
 
-	int calcSplittingAxis(int startIndex, int endIndex);
+	int calcSplittingAxis(int startIndex, int endIndex, const btVector3& means) const;
 
-	int sortAndCalcSplittingIndex(int startIndex, int endIndex, int splitAxis);
+	btVector3 calcMeanCenter(int startIndex, int endIndex) const;
+
+	int sortAndCalcSplittingIndex(int startIndex, int endIndex, int splitAxis, const btVector3& means);
 
 	void walkStacklessTree(btNodeOverlapCallback * nodeCallback, const btVector3& aabbMin, const btVector3& aabbMax) const;
 
@@ -358,30 +360,30 @@ public:
 		{
 			if (newPoint.getX() < point.getX())
 			{
-				printf("unconservative X, diffX = %f, oldX=%f,newX=%f\n", newPoint.getX() - point.getX(), newPoint.getX(), point.getX());
+				printf("unconservative X, diffX = %f, oldX=%f, newX=%f\n", newPoint.getX() - point.getX(), newPoint.getX(), point.getX());
 			}
 			if (newPoint.getY() < point.getY())
 			{
-				printf("unconservative Y, diffY = %f, oldY=%f,newY=%f\n", newPoint.getY() - point.getY(), newPoint.getY(), point.getY());
+				printf("unconservative Y, diffY = %f, oldY=%f, newY=%f\n", newPoint.getY() - point.getY(), newPoint.getY(), point.getY());
 			}
 			if (newPoint.getZ() < point.getZ())
 			{
-				printf("unconservative Z, diffZ = %f, oldZ=%f,newZ=%f\n", newPoint.getZ() - point.getZ(), newPoint.getZ(), point.getZ());
+				printf("unconservative Z, diffZ = %f, oldZ=%f, newZ=%f\n", newPoint.getZ() - point.getZ(), newPoint.getZ(), point.getZ());
 			}
 		}
 		else
 		{
 			if (newPoint.getX() > point.getX())
 			{
-				printf("unconservative X, diffX = %f, oldX=%f,newX=%f\n", newPoint.getX() - point.getX(), newPoint.getX(), point.getX());
+				printf("unconservative X, diffX = %f, oldX=%f, newX=%f\n", newPoint.getX() - point.getX(), newPoint.getX(), point.getX());
 			}
 			if (newPoint.getY() > point.getY())
 			{
-				printf("unconservative Y, diffY = %f, oldY=%f,newY=%f\n", newPoint.getY() - point.getY(), newPoint.getY(), point.getY());
+				printf("unconservative Y, diffY = %f, oldY=%f, newY=%f\n", newPoint.getY() - point.getY(), newPoint.getY(), point.getY());
 			}
 			if (newPoint.getZ() > point.getZ())
 			{
-				printf("unconservative Z, diffZ = %f, oldZ=%f,newZ=%f\n", newPoint.getZ() - point.getZ(), newPoint.getZ(), point.getZ());
+				printf("unconservative Z, diffZ = %f, oldZ=%f, newZ=%f\n", newPoint.getZ() - point.getZ(), newPoint.getZ(), point.getZ());
 			}
 		}
 #endif  //DEBUG_CHECK_DEQUANTIZATION

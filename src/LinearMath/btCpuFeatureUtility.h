@@ -4,6 +4,10 @@
 
 #include "LinearMath/btScalar.h"
 
+#ifdef BT_USE_SSE
+#define USE_SIMD
+#endif
+
 #include <string.h>  //memset
 #ifdef USE_SIMD
 #include <emmintrin.h>

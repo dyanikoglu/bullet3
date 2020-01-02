@@ -193,7 +193,7 @@ btBroadphasePair* btHashedOverlappingPairCache::internalAddPair(btBroadphaseProx
 		if(	(m_overlappingPairArray[i].m_pProxy0==proxy0)&&
 			(m_overlappingPairArray[i].m_pProxy1==proxy1))
 			{
-			printf("Adding duplicated %u<>%u\r\n",proxyId1,proxyId2);
+			printf("Adding duplicated %u<>%u\r\n", proxyId1, proxyId2);
 			internalFindPair(proxy0, proxy1, hash);
 			}
 		}*/

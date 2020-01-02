@@ -853,7 +853,7 @@ void btConeTwistConstraint::computeConeLimitInfo(const btQuaternion& qCone,
 		btScalar mag_2 = m_swingSpan1*m_swingSpan1 + m_swingSpan2*m_swingSpan2;
 		btScalar sinphi = m_swingSpan2 / sqrt(mag_2);
 		btScalar phi = asin(sinphi);
-		btScalar theta = atan2(fabs(vSwingAxis.y()),fabs(vSwingAxis.z()));
+		btScalar theta = atan2(fabs(vSwingAxis.y()), fabs(vSwingAxis.z()));
 		btScalar alpha = 3.14159f - theta - phi;
 		btScalar sinalpha = sin(alpha);
 		swingLimit = m_swingSpan1 * sinphi/sinalpha;

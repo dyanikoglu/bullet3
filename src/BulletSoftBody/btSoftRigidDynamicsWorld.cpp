@@ -143,7 +143,15 @@ void btSoftRigidDynamicsWorld::removeCollisionObject(btCollisionObject* collisio
 	if (body)
 		removeSoftBody(body);
 	else
+	{
+		// Tell the soft bodies
+		for (int i = 0; i < m_softBodies.size(); i++)
+		{
+			m_softBodies[i]->objectRemoved(collisionObject);
+		}
+
 		btDiscreteDynamicsWorld::removeCollisionObject(collisionObject);
+	}
 }
 
 void btSoftRigidDynamicsWorld::debugDrawWorld()
@@ -220,20 +228,20 @@ struct btSoftSingleRayCallback : public btBroadphaseRayCallback
 		if (m_resultCallback.needsCollision(collisionObject->getBroadphaseHandle()))
 		{
 			//RigidcollisionObject* collisionObject = ctrl->GetRigidcollisionObject();
-			//btVector3 collisionObjectAabbMin,collisionObjectAabbMax;
+			//btVector3 collisionObjectAabbMin, collisionObjectAabbMax;
 #if 0
 #ifdef RECALCULATE_AABB
-			btVector3 collisionObjectAabbMin,collisionObjectAabbMax;
-			collisionObject->getCollisionShape()->getAabb(collisionObject->getWorldTransform(),collisionObjectAabbMin,collisionObjectAabbMax);
+			btVector3 collisionObjectAabbMin, collisionObjectAabbMax;
+			collisionObject->getCollisionShape()->getAabb(collisionObject->getWorldTransform(), collisionObjectAabbMin, collisionObjectAabbMax);
 #else
-			//getBroadphase()->getAabb(collisionObject->getBroadphaseHandle(),collisionObjectAabbMin,collisionObjectAabbMax);
+			//getBroadphase()->getAabb(collisionObject->getBroadphaseHandle(), collisionObjectAabbMin, collisionObjectAabbMax);
 			const btVector3& collisionObjectAabbMin = collisionObject->getBroadphaseHandle()->m_aabbMin;
 			const btVector3& collisionObjectAabbMax = collisionObject->getBroadphaseHandle()->m_aabbMax;
 #endif
 #endif
 			//btScalar hitLambda = m_resultCallback.m_closestHitFraction;
 			//culling already done by broadphase
-			//if (btRayAabb(m_rayFromWorld,m_rayToWorld,collisionObjectAabbMin,collisionObjectAabbMax,hitLambda,m_hitNormal))
+			//if (btRayAabb(m_rayFromWorld, m_rayToWorld, collisionObjectAabbMin, collisionObjectAabbMax, hitLambda, m_hitNormal))
 			{
 				m_world->rayTestSingle(m_rayFromTrans, m_rayToTrans,
 									   collisionObject,

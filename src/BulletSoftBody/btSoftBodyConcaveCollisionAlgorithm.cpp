@@ -52,7 +52,7 @@ btSoftBodyTriangleCallback::btSoftBodyTriangleCallback(btDispatcher* dispatcher,
 	//
 	// create the manifold from the dispatcher 'manifold pool'
 	//
-	//	  m_manifoldPtr = m_dispatcher->getNewManifold(m_convexBody,m_triBody);
+	//	  m_manifoldPtr = m_dispatcher->getNewManifold(m_convexBody, m_triBody);
 
 	clearCache();
 }
@@ -140,7 +140,7 @@ void btSoftBodyTriangleCallback::processTriangle(btVector3* triangle, int partId
 
 		btConvexHullShape* tm = new btConvexHullShape(&pts[0].getX(), 6);
 
-		//		btBU_Simplex1to4 tm(triangle[0],triangle[1],triangle[2],other);
+		//		btBU_Simplex1to4 tm(triangle[0], triangle[1], triangle[2], other);
 
 		//btTriangleShape tm(triangle[0],triangle[1],triangle[2]);
 		//	tm.setMargin(m_collisionMarginTriangle);

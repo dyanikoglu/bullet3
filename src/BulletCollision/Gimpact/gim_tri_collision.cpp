@@ -14,14 +14,14 @@ email: projectileman@yahoo.com
  This library is free software; you can redistribute it and/or
  modify it under the terms of EITHER:
    (1) The GNU Lesser General Public License as published by the Free
-       Software Foundation; either version 2.1 of the License, or (at
-       your option) any later version. The text of the GNU Lesser
-       General Public License is included with this library in the
-       file GIMPACT-LICENSE-LGPL.TXT.
+	   Software Foundation; either version 2.1 of the License, or (at
+	   your option) any later version. The text of the GNU Lesser
+	   General Public License is included with this library in the
+	   file GIMPACT-LICENSE-LGPL.TXT.
    (2) The BSD-style license that is included with this library in
-       the file GIMPACT-LICENSE-BSD.TXT.
+	   the file GIMPACT-LICENSE-BSD.TXT.
    (3) The zlib/libpng license that is included with this library in
-       the file GIMPACT-LICENSE-ZLIB.TXT.
+	   the file GIMPACT-LICENSE-ZLIB.TXT.
 
  This library is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -147,23 +147,23 @@ public:
 		btVector3 temp_points1[MAX_TRI_CLIPPING];
 
 		GUINT clipped_count= PLANE_CLIP_TRIANGLE_GENERIC(
-			0,srcpoints[0],srcpoints[1],srcpoints[2],temp_points,
-			DISTANCE_EDGE(tripoints[0],tripoints[1],i0,i1));
+			0, srcpoints[0], srcpoints[1], srcpoints[2], temp_points,
+			DISTANCE_EDGE(tripoints[0], tripoints[1], i0, i1));
 		
 		
 		if(clipped_count == 0) return 0;
 
 		// edge 1
 		clipped_count = PLANE_CLIP_POLYGON_GENERIC(
-			0,temp_points,clipped_count,temp_points1,
-			DISTANCE_EDGE(tripoints[1],tripoints[2],i0,i1));
+			0, temp_points, clipped_count, temp_points1,
+			DISTANCE_EDGE(tripoints[1], tripoints[2], i0, i1));
 
 		if(clipped_count == 0) return 0;
 
 		// edge 2
 		clipped_count = PLANE_CLIP_POLYGON_GENERIC(
-			0,temp_points1,clipped_count,clipped_points,
-			DISTANCE_EDGE(tripoints[2],tripoints[0],i0,i1));
+			0, temp_points1, clipped_count, clipped_points,
+			DISTANCE_EDGE(tripoints[2], tripoints[0], i0, i1));
 
 		return clipped_count;*/
 	}
@@ -500,28 +500,28 @@ public:
 
 		btVector4 edgeplane;
 
-		EDGE_PLANE(tripoints[0],tripoints[1],tri_plane,edgeplane);
+		EDGE_PLANE(tripoints[0], tripoints[1], tri_plane, edgeplane);
 
 		GUINT clipped_count = PLANE_CLIP_TRIANGLE3D(
-			edgeplane,srcpoints[0],srcpoints[1],srcpoints[2],temp_points);
+			edgeplane, srcpoints[0], srcpoints[1], srcpoints[2], temp_points);
 
 		if(clipped_count == 0) return 0;
 
 		// edge 1
 
-		EDGE_PLANE(tripoints[1],tripoints[2],tri_plane,edgeplane);
+		EDGE_PLANE(tripoints[1], tripoints[2], tri_plane, edgeplane);
 
 		clipped_count = PLANE_CLIP_POLYGON3D(
-			edgeplane,temp_points,clipped_count,temp_points1);
+			edgeplane, temp_points, clipped_count, temp_points1);
 
 		if(clipped_count == 0) return 0;
 
 		// edge 2
 
-		EDGE_PLANE(tripoints[2],tripoints[0],tri_plane,edgeplane);
+		EDGE_PLANE(tripoints[2], tripoints[0], tri_plane, edgeplane);
 
 		clipped_count = PLANE_CLIP_POLYGON3D(
-			edgeplane,temp_points1,clipped_count,clipped_points);
+			edgeplane, temp_points1, clipped_count, clipped_points);
 
 		return clipped_count;
 	}
@@ -557,10 +557,10 @@ public:
 		// plane v vs U points
 
 
-		TRIANGLE_PLANE(tv_vertices[0],tv_vertices[1],tv_vertices[2],contacts1.m_separating_normal);
+		TRIANGLE_PLANE(tv_vertices[0], tv_vertices[1], tv_vertices[2], contacts1.m_separating_normal);
 
 		clipped_count = clip_triangle(
-			contacts1.m_separating_normal,tv_vertices,tu_vertices,clipped_points);
+			contacts1.m_separating_normal, tv_vertices, tu_vertices, clipped_points);
 
 		if(clipped_count == 0 )
 		{
@@ -568,7 +568,7 @@ public:
 		}
 
 		//find most deep interval face1
-		contacts1.merge_points(contacts1.m_separating_normal,margin,clipped_points,clipped_count);
+		contacts1.merge_points(contacts1.m_separating_normal, margin, clipped_points, clipped_count);
 		if(contacts1.m_point_count == 0) return false; // too far
 
 		//Normal pointing to triangle1
@@ -576,10 +576,10 @@ public:
 
 		//Clip tri1 by tri2 edges
 
-		TRIANGLE_PLANE(tu_vertices[0],tu_vertices[1],tu_vertices[2],contacts2.m_separating_normal);
+		TRIANGLE_PLANE(tu_vertices[0], tu_vertices[1], tu_vertices[2], contacts2.m_separating_normal);
 
 		clipped_count = clip_triangle(
-			contacts2.m_separating_normal,tu_vertices,tv_vertices,clipped_points);
+			contacts2.m_separating_normal, tu_vertices, tv_vertices, clipped_points);
 
 		if(clipped_count == 0 )
 		{
@@ -587,7 +587,7 @@ public:
 		}
 
 		//find most deep interval face1
-		contacts2.merge_points(contacts2.m_separating_normal,margin,clipped_points,clipped_count);
+		contacts2.merge_points(contacts2.m_separating_normal, margin, clipped_points, clipped_count);
 		if(contacts2.m_point_count == 0) return false; // too far
 
 		contacts2.m_separating_normal *= -1.f;

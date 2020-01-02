@@ -251,9 +251,10 @@ void btDiscreteDynamicsWorldMt::integrateTransforms(btScalar timeStep)
 	}
 }
 
-int btDiscreteDynamicsWorldMt::stepSimulation(btScalar timeStep, int maxSubSteps, btScalar fixedTimeStep)
+int btDiscreteDynamicsWorldMt::stepSimulation(btScalar timeStep, int maxSubSteps, btScalar fixedTimeStep, int fixedSubSteps)
 {
-	int numSubSteps = btDiscreteDynamicsWorld::stepSimulation(timeStep, maxSubSteps, fixedTimeStep);
+	// TODO: is fixedSubSteps handled correctly?
+	int numSubSteps = btDiscreteDynamicsWorld::stepSimulation(timeStep, maxSubSteps, fixedTimeStep, fixedSubSteps);
 	if (btITaskScheduler* scheduler = btGetTaskScheduler())
 	{
 		// tell Bullet's threads to sleep, so other threads can run

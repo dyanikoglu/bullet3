@@ -20,6 +20,7 @@ subject to the following restrictions:
 #include "LinearMath/btSerializer.h"
 
 ///for btTriangleInfo m_flags
+// DrChat: DON'T CHANGE THESE WITHOUT CHANGING btInternalEdgeUtility.cpp (it depends on these numbers being constant)
 #define TRI_INFO_V0V1_CONVEX 1
 #define TRI_INFO_V1V2_CONVEX 2
 #define TRI_INFO_V2V0_CONVEX 4
@@ -42,9 +43,16 @@ struct btTriangleInfo
 
 	int m_flags;
 
-	btScalar m_edgeV0V1Angle;
-	btScalar m_edgeV1V2Angle;
-	btScalar m_edgeV2V0Angle;
+	union {
+		btScalar m_edgeAngles[3];
+
+		struct
+		{
+			btScalar m_edgeV0V1Angle;
+			btScalar m_edgeV1V2Angle;
+			btScalar m_edgeV2V0Angle;
+		};
+	};
 };
 
 typedef btHashMap<btHashInt, btTriangleInfo> btInternalTriangleInfoMap;

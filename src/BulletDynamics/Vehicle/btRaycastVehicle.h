@@ -54,7 +54,6 @@ public:
 		btScalar m_maxSuspensionForce;
 	};
 
-private:
 	btVehicleRaycaster* m_vehicleRaycaster;
 	btScalar m_pitchControl;
 	btScalar m_steeringValue;
@@ -69,6 +68,8 @@ private:
 	void defaultInit(const btVehicleTuning& tuning);
 
 public:
+	btAlignedObjectArray<btWheelInfo> m_wheelInfo;
+
 	//constructor to create a car from an existing rigidbody
 	btRaycastVehicle(const btVehicleTuning& tuning, btRigidBody* chassis, btVehicleRaycaster* raycaster);
 
@@ -84,9 +85,9 @@ public:
 	///btActionInterface interface
 	void debugDraw(btIDebugDraw* debugDrawer);
 
-	const btTransform& getChassisWorldTransform() const;
+	const btTransform getChassisWorldTransform() const;
 
-	btScalar rayCast(btWheelInfo& wheel);
+	btScalar rayCast(int wheel);
 
 	virtual void updateVehicle(btScalar step);
 
@@ -96,13 +97,15 @@ public:
 
 	void setSteeringValue(btScalar steering, int wheel);
 
+	// Set the engine force in newtons
+	// This will override the brake!
 	void applyEngineForce(btScalar force, int wheel);
 
 	const btTransform& getWheelTransformWS(int wheelIndex) const;
 
 	void updateWheelTransform(int wheelIndex, bool interpolatedTransform = true);
 
-	//	void	setRaycastWheelInfo( int wheelIndex , bool isInContact, const btVector3& hitPoint, const btVector3& hitNormal,btScalar depth);
+	//	void	setRaycastWheelInfo( int wheelIndex, bool isInContact, const btVector3& hitPoint, const btVector3& hitNormal, btScalar depth);
 
 	btWheelInfo& addWheel(const btVector3& connectionPointCS0, const btVector3& wheelDirectionCS0, const btVector3& wheelAxleCS, btScalar suspensionRestLength, btScalar wheelRadius, const btVehicleTuning& tuning, bool isFrontWheel);
 
@@ -111,14 +114,13 @@ public:
 		return int(m_wheelInfo.size());
 	}
 
-	btAlignedObjectArray<btWheelInfo> m_wheelInfo;
-
 	const btWheelInfo& getWheelInfo(int index) const;
 
 	btWheelInfo& getWheelInfo(int index);
 
 	void updateWheelTransformsWS(btWheelInfo& wheel, bool interpolatedTransform = true);
 
+	// Brake impulse
 	void setBrake(btScalar brake, int wheelIndex);
 
 	void setPitchControl(btScalar pitch)
@@ -212,7 +214,7 @@ public:
 	{
 	}
 
-	virtual void* castRay(const btVector3& from, const btVector3& to, btVehicleRaycasterResult& result);
+	virtual void* castRay(btWheelInfo* wheel, const btVector3& from, const btVector3& to, btVehicleRaycasterResult& result) = 0;
 };
 
 #endif  //BT_RAYCASTVEHICLE_H

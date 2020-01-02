@@ -290,7 +290,7 @@ void btSimpleBroadphase::calculateOverlappingPairs(btDispatcher* dispatcher)
 				{
 					m_pairCache->cleanOverlappingPair(pair, dispatcher);
 
-					//		m_overlappingPairArray.swap(i,m_overlappingPairArray.size()-1);
+					//		m_overlappingPairArray.swap(i, m_overlappingPairArray.size()-1);
 					//		m_overlappingPairArray.pop_back();
 					pair.m_pProxy0 = 0;
 					pair.m_pProxy1 = 0;

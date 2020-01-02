@@ -107,10 +107,10 @@ void dLineClosestApproach(const btVector3& pa, const btVector3& ua,
 }
 
 // find all the intersection points between the 2D rectangle with vertices
-// at (+/-h[0],+/-h[1]) and the 2D quadrilateral with vertices (p[0],p[1]),
-// (p[2],p[3]),(p[4],p[5]),(p[6],p[7]).
+// at (+/-h[0],+/-h[1]) and the 2D quadrilateral with vertices (p[0], p[1]),
+// (p[2], p[3]), (p[4], p[5]), (p[6], p[7]).
 //
-// the intersection points are returned as x,y pairs in the 'ret' array.
+// the intersection points are returned as x, y pairs in the 'ret' array.
 // the number of intersection points is returned by the function (this will
 // be in the range 0 to 8).
 

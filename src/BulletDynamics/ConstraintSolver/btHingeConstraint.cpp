@@ -879,7 +879,7 @@ void btHingeConstraint::getInfo2InternalUsingFrameOffset(btConstraintInfo2* info
 	info->m_J2angularAxis[s4 + 2] = -q[2];
 	// compute the right hand side of the constraint equation. set relative
 	// body velocities along p and q to bring the hinge back into alignment.
-	// if ax1A,ax1B are the unit length hinge axes as computed from bodyA and
+	// if ax1A, ax1B are the unit length hinge axes as computed from bodyA and
 	// bodyB, we need to rotate both bodies along the axis u = (ax1 x ax2).
 	// if "theta" is the angle between ax1 and ax2, we need an angular velocity
 	// along u to cover angle erp*theta in one step :

@@ -23,6 +23,7 @@ subject to the following restrictions:
 #define btCollisionObjectData btCollisionObjectFloatData
 #endif
 
+// TODO: Use these callbacks instead!!!!!
 btScalar gContactBreakingThreshold = btScalar(0.02);
 ContactDestroyedCallback gContactDestroyedCallback = 0;
 ContactProcessedCallback gContactProcessedCallback = 0;
@@ -248,7 +249,7 @@ void btPersistentManifold::refreshContactPoints(const btTransform& trA, const bt
 {
 	int i;
 #ifdef DEBUG_PERSISTENCY
-	printf("refreshContactPoints posA = (%f,%f,%f) posB = (%f,%f,%f)\n",
+	printf("refreshContactPoints posA = (%f, %f, %f) posB = (%f, %f, %f)\n",
 		   trA.getOrigin().getX(),
 		   trA.getOrigin().getY(),
 		   trA.getOrigin().getZ(),
@@ -291,8 +292,11 @@ void btPersistentManifold::refreshContactPoints(const btTransform& trA, const bt
 			else
 			{
 				//contact point processed callback
+				// DrChat: Removed due to multithreading
+				/*
 				if (gContactProcessedCallback)
 					(*gContactProcessedCallback)(manifoldPoint, (void*)m_body0, (void*)m_body1);
+				*/
 			}
 		}
 	}

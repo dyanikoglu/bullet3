@@ -72,6 +72,7 @@ public:
 		btScalar m_fraction;  //input and output
 		btIDebugDraw* m_debugDrawer;
 		btScalar m_allowedPenetration;
+		btScalar m_penetrationDist;  // Distance last raytest penetrated through object (neg means penetrated)
 		
 		int m_subSimplexCastMaxIterations;
 		btScalar m_subSimplexCastEpsilon;

@@ -371,7 +371,7 @@ protected:
 	//! insert an element in hash table
 	/*!
     If the element exists, this won't insert the element
-    \return the index in the array of the existing element,or GIM_INVALID_HASH if the element has been inserted
+    \return the index in the array of the existing element, or GIM_INVALID_HASH if the element has been inserted
     If so, the element has been inserted at the last position of the array.
     */
 	inline GUINT _insert_hash_table(GUINT hashkey, const T& value)
@@ -398,7 +398,7 @@ protected:
 	//! insert an element in hash table.
 	/*!
     If the element exists, this replaces the element.
-    \return the index in the array of the existing element,or GIM_INVALID_HASH if the element has been inserted
+    \return the index in the array of the existing element, or GIM_INVALID_HASH if the element has been inserted
     If so, the element has been inserted at the last position of the array.
     */
 	inline GUINT _insert_hash_table_replace(GUINT hashkey, const T& value)

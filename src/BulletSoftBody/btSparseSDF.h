@@ -158,7 +158,7 @@ struct btSparseSdf
 				pc = pn;
 			}
 		}
-		//printf("GC[%d]: %d cells, PpQ: %f\r\n",puid,ncells,nprobes/(btScalar)nqueries);
+		//printf("GC[%d]: %d cells, PpQ: %f\r\n", puid, ncells, nprobes/(btScalar)nqueries);
 		nqueries = 1;
 		nprobes = 1;
 		++puid;  ///@todo: Reset puid's when int range limit is reached	*/

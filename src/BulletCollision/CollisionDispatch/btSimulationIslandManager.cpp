@@ -399,7 +399,6 @@ void btSimulationIslandManager::processIslands(btDispatcher* dispatcher, btColli
 			int islandId = getUnionFind().getElement(startIslandIndex).m_id;
 
 			bool islandSleeping = true;
-
 			for (endIslandIndex = startIslandIndex; (endIslandIndex < numElem) && (getUnionFind().getElement(endIslandIndex).m_id == islandId); endIslandIndex++)
 			{
 				int i = getUnionFind().getElement(endIslandIndex).m_sz;

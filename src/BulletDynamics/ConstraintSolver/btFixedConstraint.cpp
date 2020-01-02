@@ -16,6 +16,7 @@ subject to the following restrictions:
 #include "btFixedConstraint.h"
 #include "BulletDynamics/Dynamics/btRigidBody.h"
 #include "LinearMath/btTransformUtil.h"
+#include "LinearMath/btIDebugDraw.h"
 #include <new>
 
 btFixedConstraint::btFixedConstraint(btRigidBody& rbA, btRigidBody& rbB, const btTransform& frameInA, const btTransform& frameInB)
@@ -29,4 +30,13 @@ btFixedConstraint::btFixedConstraint(btRigidBody& rbA, btRigidBody& rbB, const b
 
 btFixedConstraint::~btFixedConstraint()
 {
+}
+
+void btFixedConstraint::debugDraw(btIDebugDraw* debugDraw)
+{
+	btTransform transA = m_rbA.getCenterOfMassTransform() * m_frameInA;
+	btTransform transB = m_rbB.getCenterOfMassTransform() * m_frameInB;
+
+	debugDraw->drawTransform(transA, m_dbgDrawSize);
+	debugDraw->drawTransform(transB, m_dbgDrawSize);
 }

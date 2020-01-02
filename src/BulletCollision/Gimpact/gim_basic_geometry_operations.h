@@ -335,7 +335,7 @@ SIMD_FORCE_INLINE bool INTERSECT_PLANES(
 
 //***************** SEGMENT and LINE FUNCTIONS **********************************///
 
-/*! Finds the closest point(cp) to (v) on a segment (e1,e2)
+/*! Finds the closest point(cp) to (v) on a segment (e1, e2)
  */
 template <typename CLASS_POINT>
 SIMD_FORCE_INLINE void CLOSEST_POINT_ON_SEGMENT(

@@ -213,7 +213,7 @@ public:
 
 	/*!
 
-	Solve the System for u,v parameters:
+	Solve the System for u, v parameters:
 
 	u*axe1[i1] + v*axe2[i1] = vecproj[i1]
 	u*axe1[i2] + v*axe2[i2] = vecproj[i2]

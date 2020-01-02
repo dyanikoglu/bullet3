@@ -36,7 +36,7 @@ subject to the following restrictions:
 #include "LinearMath/btSerializer.h"
 #include "BulletCollision/CollisionShapes/btConvexPolyhedron.h"
 #include "BulletCollision/CollisionDispatch/btCollisionObjectWrapper.h"
-
+#include "BulletCollision/Gimpact/btGImpactShape.h"
 //#define DISABLE_DBVT_COMPOUNDSHAPE_RAYCAST_ACCELERATION
 
 //#define USE_BRUTEFORCE_RAYBROADPHASE 1
@@ -178,18 +178,13 @@ void btCollisionWorld::updateSingleAabb(btCollisionObject* colObj)
 	}
 	else
 	{
-		//something went wrong, investigate
-		//this assert is unwanted in 3D modelers (danger of loosing work)
-		colObj->setActivationState(DISABLE_SIMULATION);
-
-		static bool reportMe = true;
-		if (reportMe && m_debugDrawer)
+		if (colObj->getActivationState() != DISABLE_SIMULATION)
 		{
-			reportMe = false;
-			m_debugDrawer->reportErrorWarning("Overflow in AABB, object removed from simulation");
-			m_debugDrawer->reportErrorWarning("If you can reproduce this, please email bugs@continuousphysics.com\n");
-			m_debugDrawer->reportErrorWarning("Please include above information, your Platform, version of OS.\n");
-			m_debugDrawer->reportErrorWarning("Thanks.\n");
+			//something went wrong, investigate
+			//this assert is unwanted in 3D modelers (danger of losing work)
+			colObj->setActivationState(DISABLE_SIMULATION);
+
+			btDbgWarning("Overflow in AABB, object \"%s\" removed from simulation!\n", colObj->getDebugName() ? colObj->getDebugName() : "<unset name>");
 		}
 	}
 }
@@ -278,7 +273,8 @@ void btCollisionWorld::rayTestSingle(const btTransform& rayFromTrans, const btTr
 									 btCollisionObject* collisionObject,
 									 const btCollisionShape* collisionShape,
 									 const btTransform& colObjWorldTransform,
-									 RayResultCallback& resultCallback)
+									 RayResultCallback& resultCallback,
+									 btIDebugDraw* debugDraw)
 {
 	btCollisionObjectWrapper colObWrap(0, collisionShape, collisionObject, colObjWorldTransform, -1, -1);
 	btCollisionWorld::rayTestSingleInternal(rayFromTrans, rayToTrans, &colObWrap, resultCallback);
@@ -286,7 +282,8 @@ void btCollisionWorld::rayTestSingle(const btTransform& rayFromTrans, const btTr
 
 void btCollisionWorld::rayTestSingleInternal(const btTransform& rayFromTrans, const btTransform& rayToTrans,
 											 const btCollisionObjectWrapper* collisionObjectWrap,
-											 RayResultCallback& resultCallback)
+											 RayResultCallback& resultCallback,
+											 btIDebugDraw* debugDraw)
 {
 	btSphereShape pointShape(btScalar(0.0));
 	pointShape.setMargin(0.f);
@@ -299,8 +296,10 @@ void btCollisionWorld::rayTestSingleInternal(const btTransform& rayFromTrans, co
 		//		BT_PROFILE("rayTestConvex");
 		btConvexCast::CastResult castResult;
 		castResult.m_fraction = resultCallback.m_closestHitFraction;
+		castResult.m_debugDrawer = debugDraw;
 
 		btConvexShape* convexShape = (btConvexShape*)collisionShape;
+
 		btVoronoiSimplexSolver simplexSolver;
 		btSubsimplexConvexCast subSimplexConvexCaster(castShape, convexShape, &simplexSolver);
 
@@ -530,18 +529,21 @@ void btCollisionWorld::rayTestSingleInternal(const btTransform& rayFromTrans, co
 					const btTransform& m_rayFromTrans;
 					const btTransform& m_rayToTrans;
 					RayResultCallback& m_resultCallback;
+					btIDebugDraw* m_debugDrawer;
 
 					RayTester(const btCollisionObject* collisionObject,
 							  const btCompoundShape* compoundShape,
 							  const btTransform& colObjWorldTransform,
 							  const btTransform& rayFromTrans,
 							  const btTransform& rayToTrans,
-							  RayResultCallback& resultCallback) : m_collisionObject(collisionObject),
-																   m_compoundShape(compoundShape),
-																   m_colObjWorldTransform(colObjWorldTransform),
-																   m_rayFromTrans(rayFromTrans),
-																   m_rayToTrans(rayToTrans),
-																   m_resultCallback(resultCallback)
+							  RayResultCallback& resultCallback,
+							  btIDebugDraw* debugDrawer) : m_collisionObject(collisionObject),
+														   m_compoundShape(compoundShape),
+														   m_colObjWorldTransform(colObjWorldTransform),
+														   m_rayFromTrans(rayFromTrans),
+														   m_rayToTrans(rayToTrans),
+														   m_resultCallback(resultCallback),
+														   m_debugDrawer(debugDrawer)
 					{
 					}
 
@@ -560,7 +562,8 @@ void btCollisionWorld::rayTestSingleInternal(const btTransform& rayFromTrans, co
 							m_rayFromTrans,
 							m_rayToTrans,
 							&tmpOb,
-							my_cb);
+							my_cb,
+							m_debugDrawer);
 					}
 
 					void Process(const btDbvtNode* leaf)
@@ -578,7 +581,9 @@ void btCollisionWorld::rayTestSingleInternal(const btTransform& rayFromTrans, co
 					colObjWorldTransform,
 					rayFromTrans,
 					rayToTrans,
-					resultCallback);
+					resultCallback,
+					debugDraw);
+
 #ifndef DISABLE_DBVT_COMPOUNDSHAPE_RAYCAST_ACCELERATION
 				if (dbvt)
 				{
@@ -628,8 +633,8 @@ void btCollisionWorld::objectQuerySingleInternal(const btConvexShape* castShape,
 		btGjkEpaPenetrationDepthSolver gjkEpaPenetrationSolver;
 
 		btContinuousConvexCollision convexCaster1(castShape, convexShape, &simplexSolver, &gjkEpaPenetrationSolver);
-		//btGjkConvexCast convexCaster2(castShape,convexShape,&simplexSolver);
-		//btSubsimplexConvexCast convexCaster3(castShape,convexShape,&simplexSolver);
+		//btGjkConvexCast convexCaster2(castShape, convexShape, &simplexSolver);
+		//btSubsimplexConvexCast convexCaster3(castShape, convexShape, &simplexSolver);
 
 		btConvexCast* castPtr = &convexCaster1;
 
@@ -647,6 +652,7 @@ void btCollisionWorld::objectQuerySingleInternal(const btConvexShape* castShape,
 						castResult.m_normal,
 						castResult.m_hitPoint,
 						castResult.m_fraction);
+					localConvexResult.m_penetrationDist = castResult.m_penetrationDist;
 
 					bool normalInWorldSpace = true;
 					resultCallback.addSingleResult(localConvexResult, normalInWorldSpace);
@@ -844,6 +850,7 @@ void btCollisionWorld::objectQuerySingleInternal(const btConvexShape* castShape,
 					void ProcessChild(int index, const btTransform& childTrans, const btCollisionShape* childCollisionShape)
 					{
 						btTransform childWorldTrans = m_colObjWorldTransform * childTrans;
+						//btTransform childWorldTrans = childTrans;
 
 						struct LocalInfoAdder : public ConvexResultCallback
 						{
@@ -975,26 +982,27 @@ struct btSingleRayCallback : public btBroadphaseRayCallback
 		if (m_resultCallback.needsCollision(collisionObject->getBroadphaseHandle()))
 		{
 			//RigidcollisionObject* collisionObject = ctrl->GetRigidcollisionObject();
-			//btVector3 collisionObjectAabbMin,collisionObjectAabbMax;
+			//btVector3 collisionObjectAabbMin, collisionObjectAabbMax;
 #if 0
 #ifdef RECALCULATE_AABB
-			btVector3 collisionObjectAabbMin,collisionObjectAabbMax;
-			collisionObject->getCollisionShape()->getAabb(collisionObject->getWorldTransform(),collisionObjectAabbMin,collisionObjectAabbMax);
+			btVector3 collisionObjectAabbMin, collisionObjectAabbMax;
+			collisionObject->getCollisionShape()->getAabb(collisionObject->getWorldTransform(), collisionObjectAabbMin, collisionObjectAabbMax);
 #else
-			//getBroadphase()->getAabb(collisionObject->getBroadphaseHandle(),collisionObjectAabbMin,collisionObjectAabbMax);
+			//getBroadphase()->getAabb(collisionObject->getBroadphaseHandle(), collisionObjectAabbMin, collisionObjectAabbMax);
 			const btVector3& collisionObjectAabbMin = collisionObject->getBroadphaseHandle()->m_aabbMin;
 			const btVector3& collisionObjectAabbMax = collisionObject->getBroadphaseHandle()->m_aabbMax;
 #endif
 #endif
 			//btScalar hitLambda = m_resultCallback.m_closestHitFraction;
 			//culling already done by broadphase
-			//if (btRayAabb(m_rayFromWorld,m_rayToWorld,collisionObjectAabbMin,collisionObjectAabbMax,hitLambda,m_hitNormal))
+			//if (btRayAabb(m_rayFromWorld, m_rayToWorld, collisionObjectAabbMin, collisionObjectAabbMax, hitLambda, m_hitNormal))
 			{
 				m_world->rayTestSingle(m_rayFromTrans, m_rayToTrans,
 									   collisionObject,
 									   collisionObject->getCollisionShape(),
 									   collisionObject->getWorldTransform(),
-									   m_resultCallback);
+									   m_resultCallback,
+									   m_world->getDebugDrawer());
 			}
 		}
 		return true;

@@ -23,7 +23,7 @@ subject to the following restrictions:
 /// btDispatcher uses these types
 /// IMPORTANT NOTE:The types are ordered polyhedral, implicit convex and concave
 /// to facilitate type checking
-/// CUSTOM_POLYHEDRAL_SHAPE_TYPE,CUSTOM_CONVEX_SHAPE_TYPE and CUSTOM_CONCAVE_SHAPE_TYPE can be used to extend Bullet without modifying source code
+/// CUSTOM_POLYHEDRAL_SHAPE_TYPE, CUSTOM_CONVEX_SHAPE_TYPE and CUSTOM_CONCAVE_SHAPE_TYPE can be used to extend Bullet without modifying source code
 enum BroadphaseNativeTypes
 {
 	// polyhedral convex shapes
@@ -219,8 +219,8 @@ btBroadphasePair
 //comparison for set operation, see Solid DT_Encounter
 SIMD_FORCE_INLINE bool operator<(const btBroadphasePair& a, const btBroadphasePair& b) 
 { 
-    return a.m_pProxy0 < b.m_pProxy0 || 
-        (a.m_pProxy0 == b.m_pProxy0 && a.m_pProxy1 < b.m_pProxy1); 
+	return a.m_pProxy0 < b.m_pProxy0 || 
+		(a.m_pProxy0 == b.m_pProxy0 && a.m_pProxy1 < b.m_pProxy1); 
 }
 */
 

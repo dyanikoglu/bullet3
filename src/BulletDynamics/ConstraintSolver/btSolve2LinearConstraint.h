@@ -83,17 +83,17 @@ public:
 	/*
 	void resolveAngularConstraint(	const btMatrix3x3& invInertiaAWS,
 						const btScalar invMassA,
-						const btVector3& linvelA,const btVector3& angvelA,
+						const btVector3& linvelA, const btVector3& angvelA,
 						const btVector3& rel_posA1,
 						const btMatrix3x3& invInertiaBWS,
 						const btScalar invMassB,
-						const btVector3& linvelB,const btVector3& angvelB,
+						const btVector3& linvelB, const btVector3& angvelB,
 						const btVector3& rel_posA2,
 
 					  btScalar depthA, const btVector3& normalA, 
-					  const btVector3& rel_posB1,const btVector3& rel_posB2,
+					  const btVector3& rel_posB1, const btVector3& rel_posB2,
 					  btScalar depthB, const btVector3& normalB, 
-					  btScalar& imp0,btScalar& imp1);
+					  btScalar& imp0, btScalar& imp1);
 
 */
 };

@@ -83,6 +83,8 @@ btVector3
 public:
 	BT_DECLARE_ALIGNED_ALLOCATOR();
 
+	// FIXME: If we change btScalar to double, it will be unaligned with __m128!
+	// Need to change __m128 to __m128d in this case.
 #if defined(__SPU__) && defined(__CELLOS_LV2__)
 	btScalar m_floats[4];
 
@@ -119,16 +121,27 @@ public:
 	}
 
 	/**@brief Constructor from scalars 
-   * @param x X value
-   * @param y Y value 
-   * @param z Z value 
-   */
+		 * @param x X value
+		 * @param y Y value 
+		 * @param z Z value 
+		 */
 	SIMD_FORCE_INLINE btVector3(const btScalar& _x, const btScalar& _y, const btScalar& _z)
 	{
 		m_floats[0] = _x;
 		m_floats[1] = _y;
 		m_floats[2] = _z;
 		m_floats[3] = btScalar(0.f);
+	}
+
+	/**@brief Construct from a single scalar
+		 * @param num Scalar value
+		 */
+	SIMD_FORCE_INLINE btVector3(const btScalar& s)
+	{
+		m_floats[0] = s;
+		m_floats[1] = s;
+		m_floats[2] = s;
+		m_floats[3] = 0;
 	}
 
 #if (defined(BT_USE_SSE_IN_API) && defined(BT_USE_SSE)) || defined(BT_USE_NEON)
@@ -155,7 +168,7 @@ public:
 #endif  // #if defined (BT_USE_SSE_IN_API) || defined (BT_USE_NEON)
 
 	/**@brief Add a vector to this one 
- * @param The vector to add to this one */
+		 * @param The vector to add to this one */
 	SIMD_FORCE_INLINE btVector3& operator+=(const btVector3& v)
 	{
 #if defined(BT_USE_SSE_IN_API) && defined(BT_USE_SSE)
@@ -171,7 +184,7 @@ public:
 	}
 
 	/**@brief Subtract a vector from this one
-   * @param The vector to subtract */
+		 * @param The vector to subtract */
 	SIMD_FORCE_INLINE btVector3& operator-=(const btVector3& v)
 	{
 #if defined(BT_USE_SSE_IN_API) && defined(BT_USE_SSE)
@@ -187,7 +200,7 @@ public:
 	}
 
 	/**@brief Scale the vector
-   * @param s Scale factor */
+		 * @param s Scale factor */
 	SIMD_FORCE_INLINE btVector3& operator*=(const btScalar& s)
 	{
 #if defined(BT_USE_SSE_IN_API) && defined(BT_USE_SSE)
@@ -205,27 +218,27 @@ public:
 	}
 
 	/**@brief Inversely scale the vector 
-   * @param s Scale factor to divide by */
+		 * @param s Scale factor to divide by */
 	SIMD_FORCE_INLINE btVector3& operator/=(const btScalar& s)
 	{
 		btFullAssert(s != btScalar(0.0));
 
-#if 0  //defined(BT_USE_SSE_IN_API)
-// this code is not faster !
-		__m128 vs = _mm_load_ss(&s);
-		vs = _mm_div_ss(v1110, vs);
-		vs = bt_pshufd_ps(vs, 0x00);	//	(S S S S)
+#if 0  //defined(BT_USE_SSE_IN_API) \
+	   // this code is not faster !
+			__m128 vs = _mm_load_ss(&s);
+			vs = _mm_div_ss(v1110, vs);
+			vs = bt_pshufd_ps(vs, 0x00);	//	(S S S S)
 
-		mVec128 = _mm_mul_ps(mVec128, vs);
-		
-		return *this;
+			mVec128 = _mm_mul_ps(mVec128, vs);
+			
+			return *this;
 #else
 		return *this *= btScalar(1.0) / s;
 #endif
 	}
 
 	/**@brief Return the dot product
-   * @param v The other vector in the dot product */
+		 * @param v The other vector in the dot product */
 	SIMD_FORCE_INLINE btScalar dot(const btVector3& v) const
 	{
 #if defined BT_USE_SIMD_VECTOR3 && defined(BT_USE_SSE_IN_API) && defined(BT_USE_SSE)
@@ -276,11 +289,11 @@ public:
 	}
 
 	/**@brief Return the distance squared between the ends of this and another vector
-   * This is symantically treating the vector like a point */
+		 * This is symantically treating the vector like a point */
 	SIMD_FORCE_INLINE btScalar distance2(const btVector3& v) const;
 
 	/**@brief Return the distance between the ends of this and another vector
-   * This is symantically treating the vector like a point */
+		 * This is symantically treating the vector like a point */
 	SIMD_FORCE_INLINE btScalar distance(const btVector3& v) const;
 
 	SIMD_FORCE_INLINE btVector3& safeNormalize()
@@ -299,7 +312,7 @@ public:
 	}
 
 	/**@brief Normalize this vector 
-   * x^2 + y^2 + z^2 = 1 */
+		 * x^2 + y^2 + z^2 = 1 */
 	SIMD_FORCE_INLINE btVector3& normalize()
 	{
 		btAssert(!fuzzyZero());
@@ -313,10 +326,10 @@ public:
 		vd = _mm_add_ss(vd, z);
 
 #if 0
-        vd = _mm_sqrt_ss(vd);
-		vd = _mm_div_ss(v1110, vd);
-		vd = bt_splat_ps(vd, 0x80);
-		mVec128 = _mm_mul_ps(mVec128, vd);
+			vd = _mm_sqrt_ss(vd);
+			vd = _mm_div_ss(v1110, vd);
+			vd = bt_splat_ps(vd, 0x80);
+			mVec128 = _mm_mul_ps(mVec128, vd);
 #else
 
 		// NR step 1/sqrt(x) - vd is x, y is output
@@ -347,12 +360,12 @@ public:
 	SIMD_FORCE_INLINE btVector3 normalized() const;
 
 	/**@brief Return a rotated version of this vector
-   * @param wAxis The axis to rotate about 
-   * @param angle The angle to rotate by */
+		 * @param wAxis The axis to rotate about 
+		 * @param angle The angle to rotate by */
 	SIMD_FORCE_INLINE btVector3 rotate(const btVector3& wAxis, const btScalar angle) const;
 
 	/**@brief Return the angle between this and another vector
-   * @param v The other vector */
+		 * @param v The other vector */
 	SIMD_FORCE_INLINE btScalar angle(const btVector3& v) const
 	{
 		btScalar s = btSqrt(length2() * v.length2());
@@ -360,7 +373,7 @@ public:
 		return btAcos(dot(v) / s);
 	}
 
-	/**@brief Return a vector with the absolute values of each element */
+	/**@brief Return a vector will the absolute values of each element */
 	SIMD_FORCE_INLINE btVector3 absolute() const
 	{
 #if defined BT_USE_SIMD_VECTOR3 && defined(BT_USE_SSE_IN_API) && defined(BT_USE_SSE)
@@ -376,7 +389,7 @@ public:
 	}
 
 	/**@brief Return the cross product between this and another vector 
-   * @param v The other vector */
+		 * @param v The other vector */
 	SIMD_FORCE_INLINE btVector3 cross(const btVector3& v) const
 	{
 #if defined(BT_USE_SSE_IN_API) && defined(BT_USE_SSE)
@@ -466,14 +479,14 @@ public:
 	}
 
 	/**@brief Return the axis with the smallest value 
-   * Note return values are 0,1,2 for x, y, or z */
+		 * Note return values are 0,1,2 for x, y, or z */
 	SIMD_FORCE_INLINE int minAxis() const
 	{
 		return m_floats[0] < m_floats[1] ? (m_floats[0] < m_floats[2] ? 0 : 2) : (m_floats[1] < m_floats[2] ? 1 : 2);
 	}
 
 	/**@brief Return the axis with the largest value 
-   * Note return values are 0,1,2 for x, y, or z */
+		 * Note return values are 0,1,2 for x, y, or z */
 	SIMD_FORCE_INLINE int maxAxis() const
 	{
 		return m_floats[0] < m_floats[1] ? (m_floats[1] < m_floats[2] ? 2 : 1) : (m_floats[0] < m_floats[2] ? 2 : 0);
@@ -516,8 +529,8 @@ public:
 	}
 
 	/**@brief Return the linear interpolation between this and another vector 
-   * @param v The other vector 
-   * @param t The ration of this to v (t = 0 => return this, t=1 => return other) */
+		 * @param v The other vector 
+		 * @param t The ration of this to v (t = 0 => return this, t=1 => return other) */
 	SIMD_FORCE_INLINE btVector3 lerp(const btVector3& v, const btScalar& t) const
 	{
 #if defined(BT_USE_SSE_IN_API) && defined(BT_USE_SSE)
@@ -542,7 +555,7 @@ public:
 	}
 
 	/**@brief Elementwise multiply this vector by the other 
-   * @param v The other vector */
+		 * @param v The other vector */
 	SIMD_FORCE_INLINE btVector3& operator*=(const btVector3& v)
 	{
 #if defined(BT_USE_SSE_IN_API) && defined(BT_USE_SSE)
@@ -604,8 +617,8 @@ public:
 	}
 
 	/**@brief Set each element to the max of the current values and the values of another btVector3
-   * @param other The other btVector3 to compare with 
-   */
+		 * @param other The other btVector3 to compare with 
+		 */
 	SIMD_FORCE_INLINE void setMax(const btVector3& other)
 	{
 #if defined(BT_USE_SSE_IN_API) && defined(BT_USE_SSE)
@@ -621,8 +634,8 @@ public:
 	}
 
 	/**@brief Set each element to the min of the current values and the values of another btVector3
-   * @param other The other btVector3 to compare with 
-   */
+		 * @param other The other btVector3 to compare with 
+		 */
 	SIMD_FORCE_INLINE void setMin(const btVector3& other)
 	{
 #if defined(BT_USE_SSE_IN_API) && defined(BT_USE_SSE)
@@ -705,15 +718,15 @@ public:
 	SIMD_FORCE_INLINE void deSerializeDouble(const struct btVector3DoubleData& dataIn);
 
 	/**@brief returns index of maximum dot product between this and vectors in array[]
-         * @param array The other vectors 
-         * @param array_count The number of other vectors 
-         * @param dotOut The maximum dot product */
+		 * @param array The other vectors 
+		 * @param array_count The number of other vectors 
+		 * @param dotOut The maximum dot product */
 	SIMD_FORCE_INLINE long maxDot(const btVector3* array, long array_count, btScalar& dotOut) const;
 
 	/**@brief returns index of minimum dot product between this and vectors in array[]
-         * @param array The other vectors 
-         * @param array_count The number of other vectors 
-         * @param dotOut The minimum dot product */
+		 * @param array The other vectors 
+		 * @param array_count The number of other vectors 
+		 * @param dotOut The minimum dot product */
 	SIMD_FORCE_INLINE long minDot(const btVector3* array, long array_count, btScalar& dotOut) const;
 
 	/* create a vector as  btVector3( this->dot( btVector3 v0 ), this->dot( btVector3 v1), this->dot( btVector3 v2 ))  */
@@ -846,7 +859,7 @@ operator/(const btVector3& v, const btScalar& s)
 #if 0  //defined(BT_USE_SSE_IN_API)
 // this code is not faster !
 	__m128 vs = _mm_load_ss(&s);
-    vs = _mm_div_ss(v1110, vs);
+	vs = _mm_div_ss(v1110, vs);
 	vs = bt_pshufd_ps(vs, 0x00);	//	(S S S S)
 
 	return btVector3(_mm_mul_ps(v.mVec128, vs));
@@ -1176,7 +1189,7 @@ public:
 		return absolute4().maxAxis4();
 	}
 
-	/**@brief Set x,y,z and zero w 
+	/**@brief Set x, y,z and zero w 
    * @param x Value of x
    * @param y Value of y
    * @param z Value of z

@@ -84,7 +84,7 @@ public:
 	}
 
 	//use box inertia
-	//	virtual void	calculateLocalInertia(btScalar mass,btVector3& inertia) const;
+	//	virtual void	calculateLocalInertia(btScalar mass, btVector3& inertia) const;
 
 	int getUpAxis() const
 	{
@@ -117,7 +117,7 @@ public:
 	//debugging
 	virtual const char* getName() const
 	{
-		return "CylinderY";
+		return "cylinderY";
 	}
 
 	virtual int calculateSerializeBufferSize() const;
@@ -139,7 +139,7 @@ public:
 	//debugging
 	virtual const char* getName() const
 	{
-		return "CylinderX";
+		return "cylinderX";
 	}
 
 	virtual btScalar getRadius() const
@@ -161,7 +161,7 @@ public:
 	//debugging
 	virtual const char* getName() const
 	{
-		return "CylinderZ";
+		return "cylinderZ";
 	}
 
 	virtual btScalar getRadius() const

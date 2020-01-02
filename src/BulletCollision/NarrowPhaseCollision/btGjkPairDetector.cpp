@@ -18,7 +18,7 @@ subject to the following restrictions:
 #include "BulletCollision/NarrowPhaseCollision/btSimplexSolverInterface.h"
 #include "BulletCollision/NarrowPhaseCollision/btConvexPenetrationDepthSolver.h"
 
-#if defined(DEBUG) || defined(_DEBUG)
+#if defined(BT_DEBUG)
 //#define TEST_NON_VIRTUAL 1
 #include <stdio.h>  //for debug printf
 #ifdef __SPU__
@@ -35,7 +35,6 @@ btScalar gGjkEpaPenetrationTolerance = 1.0e-12;
 #define REL_ERROR2 btScalar(1.0e-6)
 btScalar gGjkEpaPenetrationTolerance = 0.001;
 #endif
-
 
 btGjkPairDetector::btGjkPairDetector(const btConvexShape *objectA, const btConvexShape *objectB, btSimplexSolverInterface *simplexSolver, btConvexPenetrationDepthSolver *penetrationDepthSolver)
 	: m_cachedSeparatingAxis(btScalar(0.), btScalar(1.), btScalar(0.)),
@@ -675,7 +674,7 @@ static int btDoSimplex(btSimplex *simplex, btVector3 *dir)
 		return btDoSimplex3(simplex, dir);
 	}
 	else
-	{  // btSimplexSize(simplex) == 4
+	{   // btSimplexSize(simplex) == 4
 		// tetrahedron - this is the only shape which can encapsule origin
 		// so btDoSimplex4() also contains test on it
 		return btDoSimplex4(simplex, dir);
@@ -704,7 +703,6 @@ void btGjkPairDetector::getClosestPointsNonVirtual(const ClosestPointInput &inpu
 
 	btScalar marginA = m_marginA;
 	btScalar marginB = m_marginB;
-
 
 	//for CCD we don't use margins
 	if (m_ignoreMargin)
@@ -941,16 +939,16 @@ void btGjkPairDetector::getClosestPointsNonVirtual(const ClosestPointInput &inpu
 				//degeneracy, this is typically due to invalid/uninitialized worldtransforms for a btCollisionObject
 				if (m_curIter++ > gGjkMaxIter)
 				{
-#if defined(DEBUG) || defined(_DEBUG)
+#if defined(BT_DEBUG) || defined(DEBUG_SPU_COLLISION_DETECTION)
 
-					printf("btGjkPairDetector maxIter exceeded:%i\n", m_curIter);
-					printf("sepAxis=(%f,%f,%f), squaredDistance = %f, shapeTypeA=%i,shapeTypeB=%i\n",
-						   m_cachedSeparatingAxis.getX(),
-						   m_cachedSeparatingAxis.getY(),
-						   m_cachedSeparatingAxis.getZ(),
-						   squaredDistance,
-						   m_minkowskiA->getShapeType(),
-						   m_minkowskiB->getShapeType());
+					btDbgWarning("btGjkPairDetector maxIter exceeded:%i\n", m_curIter);
+					btDbgWarning("sepAxis=(%f, %f, %f), squaredDistance = %f, shapeTypeA=%i, shapeTypeB=%i\n",
+								 m_cachedSeparatingAxis.getX(),
+								 m_cachedSeparatingAxis.getY(),
+								 m_cachedSeparatingAxis.getZ(),
+								 squaredDistance,
+								 m_minkowskiA->getShapeType(),
+								 m_minkowskiB->getShapeType());
 
 #endif
 					break;

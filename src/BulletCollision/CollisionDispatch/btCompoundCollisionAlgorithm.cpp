@@ -14,6 +14,7 @@ subject to the following restrictions:
 
 */
 
+#define BT_USE_SSE_IN_API
 #include "BulletCollision/CollisionDispatch/btCompoundCollisionAlgorithm.h"
 #include "BulletCollision/CollisionDispatch/btCollisionObject.h"
 #include "BulletCollision/CollisionShapes/btCompoundShape.h"
@@ -180,9 +181,9 @@ public:
 #if 0
 			if (m_dispatchInfo.m_debugDraw && (m_dispatchInfo.m_debugDraw->getDebugMode() & btIDebugDraw::DBG_DrawAabb))
 			{
-				btVector3 worldAabbMin,worldAabbMax;
-				m_dispatchInfo.m_debugDraw->drawAabb(aabbMin0,aabbMax0,btVector3(1,1,1));
-				m_dispatchInfo.m_debugDraw->drawAabb(aabbMin1,aabbMax1,btVector3(1,1,1));
+				btVector3 worldAabbMin, worldAabbMax;
+				m_dispatchInfo.m_debugDraw->drawAabb(aabbMin0, aabbMax0, btVector3(1,1,1));
+				m_dispatchInfo.m_debugDraw->drawAabb(aabbMin1, aabbMax1, btVector3(1,1,1));
 			}
 #endif
 
@@ -211,10 +212,10 @@ public:
 #if 0
 		if (m_dispatchInfo.m_debugDraw && (m_dispatchInfo.m_debugDraw->getDebugMode() & btIDebugDraw::DBG_DrawAabb))
 		{
-			btVector3 worldAabbMin,worldAabbMax;
+			btVector3 worldAabbMin, worldAabbMax;
 			btTransform	orgTrans = m_compoundColObjWrap->getWorldTransform();
-			btTransformAabb(leaf->volume.Mins(),leaf->volume.Maxs(),0.,orgTrans,worldAabbMin,worldAabbMax);
-			m_dispatchInfo.m_debugDraw->drawAabb(worldAabbMin,worldAabbMax,btVector3(1,0,0));
+			btTransformAabb(leaf->volume.Mins(), leaf->volume.Maxs(),0., orgTrans, worldAabbMin, worldAabbMax);
+			m_dispatchInfo.m_debugDraw->drawAabb(worldAabbMin, worldAabbMax, btVector3(1,0,0));
 		}
 #endif
 
@@ -253,22 +254,26 @@ void btCompoundCollisionAlgorithm::processCollision(const btCollisionObjectWrapp
 	///so we should add a 'refreshManifolds' in the btCollisionAlgorithm
 	{
 		int i;
-		manifoldArray.resize(0);
+		// TODO: See if that really works after latest memory leak commits
+		// e2bdd7dbb11b292b5f9fa1d8967993d13d2976fb
+		if (m_childCollisionAlgorithms.size() > m_tmpManifoldArray.capacity())
+			m_tmpManifoldArray.reserve(m_childCollisionAlgorithms.size());  // Predict the size so we don't bother with many reallocs
+
 		for (i = 0; i < m_childCollisionAlgorithms.size(); i++)
 		{
 			if (m_childCollisionAlgorithms[i])
 			{
-				m_childCollisionAlgorithms[i]->getAllContactManifolds(manifoldArray);
-				for (int m = 0; m < manifoldArray.size(); m++)
+				m_childCollisionAlgorithms[i]->getAllContactManifolds(m_tmpManifoldArray);
+				for (int m = 0; m < m_tmpManifoldArray.size(); m++)
 				{
-					if (manifoldArray[m]->getNumContacts())
+					if (m_tmpManifoldArray[m]->getNumContacts())
 					{
-						resultOut->setPersistentManifold(manifoldArray[m]);
+						resultOut->setPersistentManifold(m_tmpManifoldArray[m]);
 						resultOut->refreshContactPoints();
 						resultOut->setPersistentManifold(0);  //??necessary?
 					}
 				}
-				manifoldArray.resize(0);
+				m_tmpManifoldArray.resize(0);
 			}
 		}
 	}
@@ -302,10 +307,11 @@ void btCompoundCollisionAlgorithm::processCollision(const btCollisionObjectWrapp
 		//iterate over all children, perform an AABB check inside ProcessChildShape
 		int numChildren = m_childCollisionAlgorithms.size();
 		int i;
-		manifoldArray.resize(0);
+
 		const btCollisionShape* childShape = 0;
 		btTransform orgTrans;
-
+		// TODO: See if that really works after latest memory leak commits, manifoldArray.resize(0); is removed from that line
+		// e2bdd7dbb11b292b5f9fa1d8967993d13d2976fb
 		btTransform newChildWorldTrans;
 		btVector3 aabbMin0, aabbMax0, aabbMin1, aabbMax1;
 
@@ -337,13 +343,11 @@ void btCompoundCollisionAlgorithm::processCollision(const btCollisionObjectWrapp
 
 btScalar btCompoundCollisionAlgorithm::calculateTimeOfImpact(btCollisionObject* body0, btCollisionObject* body1, const btDispatcherInfo& dispatchInfo, btManifoldResult* resultOut)
 {
-	btAssert(0);
 	//needs to be fixed, using btCollisionObjectWrapper and NOT modifying internal data structures
 	btCollisionObject* colObj = m_isSwapped ? body1 : body0;
 	btCollisionObject* otherObj = m_isSwapped ? body0 : body1;
 
 	btAssert(colObj->getCollisionShape()->isCompound());
-
 	btCompoundShape* compoundShape = static_cast<btCompoundShape*>(colObj->getCollisionShape());
 
 	//We will use the OptimizedBVH, AABB tree to cull potential child-overlaps
@@ -362,24 +366,30 @@ btScalar btCompoundCollisionAlgorithm::calculateTimeOfImpact(btCollisionObject* 
 	for (i = 0; i < numChildren; i++)
 	{
 		//btCollisionShape* childShape = compoundShape->getChildShape(i);
+		//if (!m_childCollisionAlgorithms[i])
+		//	m_childCollisionAlgorithms[i] = m_dispatcher->findAlgorithm(
 
-		//backup
-		orgTrans = colObj->getWorldTransform();
-
-		const btTransform& childTrans = compoundShape->getChildTransform(i);
-		//btTransform	newChildWorldTrans = orgTrans*childTrans ;
-		colObj->setWorldTransform(orgTrans * childTrans);
-
-		//btCollisionShape* tmpShape = colObj->getCollisionShape();
-		//colObj->internalSetTemporaryCollisionShape( childShape );
-		frac = m_childCollisionAlgorithms[i]->calculateTimeOfImpact(colObj, otherObj, dispatchInfo, resultOut);
-		if (frac < hitFraction)
+		if (m_childCollisionAlgorithms[i])
 		{
-			hitFraction = frac;
+			//backup
+			orgTrans = colObj->getWorldTransform();
+
+			const btTransform& childTrans = compoundShape->getChildTransform(i);
+			//btTransform	newChildWorldTrans = orgTrans*childTrans ;
+			colObj->setWorldTransform(orgTrans * childTrans);
+
+			//btCollisionShape* tmpShape = colObj->getCollisionShape();
+			//colObj->internalSetTemporaryCollisionShape( childShape );
+			frac = m_childCollisionAlgorithms[i]->calculateTimeOfImpact(colObj, otherObj, dispatchInfo, resultOut);
+			if (frac < hitFraction)
+			{
+				hitFraction = frac;
+			}
+			//revert back
+			//colObj->internalSetTemporaryCollisionShape( tmpShape);
+			colObj->setWorldTransform(orgTrans);
 		}
-		//revert back
-		//colObj->internalSetTemporaryCollisionShape( tmpShape);
-		colObj->setWorldTransform(orgTrans);
 	}
+
 	return hitFraction;
 }

@@ -47,8 +47,8 @@ struct btSoftBodyWorldInfo
 	btScalar air_density;
 	btScalar water_density;
 	btScalar water_offset;
-	btScalar m_maxDisplacement;
 	btVector3 water_normal;
+	btScalar m_maxDisplacement;
 	btBroadphaseInterface* m_broadphase;
 	btDispatcher* m_dispatcher;
 	btVector3 m_gravity;
@@ -58,8 +58,8 @@ struct btSoftBodyWorldInfo
 		: air_density((btScalar)1.2),
 		  water_density(0),
 		  water_offset(0),
-		  m_maxDisplacement(1000.f),  //avoid soft body from 'exploding' so use some upper threshold of maximum motion that a node can travel per frame
 		  water_normal(0, 0, 0),
+		  m_maxDisplacement(1000.f),  // avoid soft body from 'exploding' so use some upper threshold of maximum motion that a node can travel per frame
 		  m_broadphase(0),
 		  m_dispatcher(0),
 		  m_gravity(0, -10, 0)
@@ -561,12 +561,12 @@ public:
 		{
 			if (impulse.m_asVelocity)
 			{
-				//				printf("impulse.m_velocity = %f,%f,%f\n",impulse.m_velocity.getX(),impulse.m_velocity.getY(),impulse.m_velocity.getZ());
+				//				printf("impulse.m_velocity = %f, %f, %f\n", impulse.m_velocity.getX(), impulse.m_velocity.getY(), impulse.m_velocity.getZ());
 				applyVImpulse(impulse.m_velocity, rpos);
 			}
 			if (impulse.m_asDrift)
 			{
-				//				printf("impulse.m_drift = %f,%f,%f\n",impulse.m_drift.getX(),impulse.m_drift.getY(),impulse.m_drift.getZ());
+				//				printf("impulse.m_drift = %f, %f, %f\n", impulse.m_drift.getX(), impulse.m_drift.getY(), impulse.m_drift.getZ());
 				applyDImpulse(impulse.m_drift, rpos);
 			}
 		}
@@ -1045,6 +1045,9 @@ public:
     void updateDeactivation(btScalar timeStep);
     void setZeroVelocity();
     bool wantsSleeping();
+
+	/// Object removed callback from the soft rigid dynamics world
+	void objectRemoved(btCollisionObject* colObj);
 
 	//
 	// Functionality to deal with new accelerated solvers.

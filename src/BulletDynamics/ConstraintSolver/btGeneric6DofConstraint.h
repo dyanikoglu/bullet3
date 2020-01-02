@@ -142,7 +142,7 @@ public:
 	btVector3 m_normalCFM;     //!< Constraint force mixing factor
 	btVector3 m_stopERP;       //!< Error tolerance factor when joint is at limit
 	btVector3 m_stopCFM;       //!< Constraint force mixing factor when joint is at limit
-							   //!@}
+	//!@}
 	bool m_enableMotor[3];
 	btVector3 m_targetVelocity;     //!< target motor velocity
 	btVector3 m_maxMotorForce;      //!< max force on motor
@@ -296,11 +296,15 @@ protected:
 	btTransform m_calculatedTransformA;
 	btTransform m_calculatedTransformB;
 	btVector3 m_calculatedAxisAngleDiff;
-	btVector3 m_calculatedAxis[3];
+	btMatrix3x3 m_calculatedAxis;
 	btVector3 m_calculatedLinearDiff;
 	btScalar m_factA;
 	btScalar m_factB;
 	bool m_hasStaticBody;
+
+	// Angular/Linear limits only? Cannot be both!
+	bool m_angularOnly;
+	bool m_linearOnly;
 
 	btVector3 m_AnchorPos;  // point betwen pivots of bodies A and B to solve linear axes
 
@@ -343,10 +347,12 @@ public:
 	btGeneric6DofConstraint(btRigidBody & rbA, btRigidBody & rbB, const btTransform& frameInA, const btTransform& frameInB, bool useLinearReferenceFrameA);
 	btGeneric6DofConstraint(btRigidBody & rbB, const btTransform& frameInB, bool useLinearReferenceFrameB);
 
+	virtual void debugDraw(btIDebugDraw * drawer);
+
 	//! Calcs global transform of the offsets
 	/*!
 	Calcs the global transform for the joint offset for body A an B, and also calcs the agle differences between the bodies.
-	\sa btGeneric6DofConstraint.getCalculatedTransformA , btGeneric6DofConstraint.getCalculatedTransformB, btGeneric6DofConstraint.calculateAngleInfo
+	\sa btGeneric6DofConstraint.getCalculatedTransformA, btGeneric6DofConstraint.getCalculatedTransformB, btGeneric6DofConstraint.calculateAngleInfo
 	*/
 	void calculateTransforms(const btTransform& transA, const btTransform& transB);
 
@@ -354,8 +360,8 @@ public:
 
 	//! Gets the global transform of the offset for body A
 	/*!
-    \sa btGeneric6DofConstraint.getFrameOffsetA, btGeneric6DofConstraint.getFrameOffsetB, btGeneric6DofConstraint.calculateAngleInfo.
-    */
+	\sa btGeneric6DofConstraint.getFrameOffsetA, btGeneric6DofConstraint.getFrameOffsetB, btGeneric6DofConstraint.calculateAngleInfo.
+	*/
 	const btTransform& getCalculatedTransformA() const
 	{
 		return m_calculatedTransformA;
@@ -363,8 +369,8 @@ public:
 
 	//! Gets the global transform of the offset for body B
 	/*!
-    \sa btGeneric6DofConstraint.getFrameOffsetA, btGeneric6DofConstraint.getFrameOffsetB, btGeneric6DofConstraint.calculateAngleInfo.
-    */
+	\sa btGeneric6DofConstraint.getFrameOffsetA, btGeneric6DofConstraint.getFrameOffsetB, btGeneric6DofConstraint.calculateAngleInfo.
+	*/
 	const btTransform& getCalculatedTransformB() const
 	{
 		return m_calculatedTransformB;
@@ -422,6 +428,28 @@ public:
 	btScalar getRelativePivotPosition(int axis_index) const;
 
 	void setFrames(const btTransform& frameA, const btTransform& frameB);
+
+	void setLinearOnly(bool linearOnly)
+	{
+		btAssert(!m_angularOnly);  // Can't be both!
+		m_linearOnly = linearOnly;
+	}
+
+	void setAngularOnly(bool angularOnly)
+	{
+		btAssert(!m_linearOnly);  // Can't be both!
+		m_angularOnly = angularOnly;
+	}
+
+	bool isLinearOnly()
+	{
+		return m_linearOnly;
+	}
+
+	bool isAngularOnly()
+	{
+		return m_angularOnly;
+	}
 
 	//! Test angular limit.
 	/*!

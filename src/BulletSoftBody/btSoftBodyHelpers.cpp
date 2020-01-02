@@ -26,9 +26,10 @@ subject to the following restrictions:
 #include "LinearMath/btConvexHullComputer.h"
 #include <map>
 #include <vector>
+#include <algorithm>
 
 static void drawVertex(btIDebugDraw* idraw,
-					   const btVector3& x, btScalar s, const btVector3& c)
+                       const btVector3& x, btScalar s, const btVector3& c)
 {
 	idraw->drawLine(x - btVector3(s, 0, 0), x + btVector3(s, 0, 0), c);
 	idraw->drawLine(x - btVector3(0, s, 0), x + btVector3(0, s, 0), c);
@@ -41,14 +42,16 @@ static void drawBox(btIDebugDraw* idraw,
 					const btVector3& maxs,
 					const btVector3& color)
 {
-	const btVector3 c[] = {btVector3(mins.x(), mins.y(), mins.z()),
-						   btVector3(maxs.x(), mins.y(), mins.z()),
-						   btVector3(maxs.x(), maxs.y(), mins.z()),
-						   btVector3(mins.x(), maxs.y(), mins.z()),
-						   btVector3(mins.x(), mins.y(), maxs.z()),
-						   btVector3(maxs.x(), mins.y(), maxs.z()),
-						   btVector3(maxs.x(), maxs.y(), maxs.z()),
-						   btVector3(mins.x(), maxs.y(), maxs.z())};
+	const btVector3 c[] = {
+		btVector3(mins.x(), mins.y(), mins.z()),
+		btVector3(maxs.x(), mins.y(), mins.z()),
+		btVector3(maxs.x(), maxs.y(), mins.z()),
+		btVector3(mins.x(), maxs.y(), mins.z()),
+		btVector3(mins.x(), mins.y(), maxs.z()),
+		btVector3(maxs.x(), mins.y(), maxs.z()),
+		btVector3(maxs.x(), maxs.y(), maxs.z()),
+		btVector3(mins.x(), maxs.y(), maxs.z())};
+
 	idraw->drawLine(c[0], c[1], color);
 	idraw->drawLine(c[1], c[2], color);
 	idraw->drawLine(c[2], c[3], color);
@@ -143,7 +146,7 @@ static inline T average(const btAlignedObjectArray<T>& items)
 	const btVector3	a=x1-x0;
 	const btVector3	b=x2-x0;
 	const btVector3	c=x3-x0;
-	return(btDot(a,btCross(b,c)));
+	return(btDot(a, btCross(b, c)));
 }
 #endif
 
@@ -160,7 +163,7 @@ static btVector3		stresscolor(btScalar stress)
 		btVector3(1,0,0)};
 	static const int		ncolors=sizeof(spectrum)/sizeof(spectrum[0])-1;
 	static const btScalar	one=1;
-	stress=btMax<btScalar>(0,btMin<btScalar>(1,stress))*ncolors;
+	stress=btMax<btScalar>(0, btMin<btScalar>(1, stress))*ncolors;
 	const int				sel=(int)stress;
 	const btScalar			frc=stress-sel;
 	return(spectrum[sel]+(spectrum[sel+1]-spectrum[sel])*frc);
@@ -208,7 +211,7 @@ void btSoftBodyHelpers::Draw(btSoftBody* psb,
 				for (int i = 0; i < computer.faces.size(); i++)
 				{
 					int face = computer.faces[i];
-					//printf("face=%d\n",face);
+					//printf("face=%d\n", face);
 					const btConvexHullComputer::Edge* firstEdge = &computer.edges[face];
 					const btConvexHullComputer::Edge* edge = firstEdge->getNextEdgeOfFace();
 
@@ -251,15 +254,15 @@ void btSoftBodyHelpers::Draw(btSoftBody* psb,
 			{
 				const btSoftBody::Cluster&	c=psb->m_clusters[i];
 				const btVector3				r=c.m_nodes[j]->m_x-c.m_com;
-				const btVector3				v=c.m_lv+btCross(c.m_av,r);
-				idraw->drawLine(c.m_nodes[j]->m_x,c.m_nodes[j]->m_x+v,btVector3(1,0,0));
+				const btVector3				v=c.m_lv+btCross(c.m_av, r);
+				idraw->drawLine(c.m_nodes[j]->m_x, c.m_nodes[j]->m_x+v, btVector3(1,0,0));
 			}
 #endif
 			/* Frame		*/
 			//		btSoftBody::Cluster& c=*psb->m_clusters[i];
-			//		idraw->drawLine(c.m_com,c.m_framexform*btVector3(10,0,0),btVector3(1,0,0));
-			//		idraw->drawLine(c.m_com,c.m_framexform*btVector3(0,10,0),btVector3(0,1,0));
-			//		idraw->drawLine(c.m_com,c.m_framexform*btVector3(0,0,10),btVector3(0,0,1));
+			//		idraw->drawLine(c.m_com, c.m_framexform*btVector3(10,0,0), btVector3(1,0,0));
+			//		idraw->drawLine(c.m_com, c.m_framexform*btVector3(0,10,0), btVector3(0,1,0));
+			//		idraw->drawLine(c.m_com, c.m_framexform*btVector3(0,0,10), btVector3(0,0,1));
 		}
 	}
 	else
@@ -1150,6 +1153,7 @@ btSoftBody* btSoftBodyHelpers::CreateFromTetGenData(btSoftBodyWorldInfo& worldIn
 	int ndims = 0;
 	int nattrb = 0;
 	int hasbounds = 0;
+
 	int result = sscanf(node, "%d %d %d %d", &nnode, &ndims, &nattrb, &hasbounds);
 	result = sscanf(node, "%d %d %d %d", &nnode, &ndims, &nattrb, &hasbounds);
 	node += nextLine(node);
@@ -1176,26 +1180,27 @@ btSoftBody* btSoftBodyHelpers::CreateFromTetGenData(btSoftBodyWorldInfo& worldIn
 		pos[index].setY(btScalar(y));
 		pos[index].setZ(btScalar(z));
 	}
+
 	btSoftBody* psb = new btSoftBody(&worldInfo, nnode, &pos[0], 0);
 #if 0
-if(face&&face[0])
+	if(face && face[0])
 	{
-	int								nface=0;
-	sf>>nface;sf>>hasbounds;
-	for(int i=0;i<nface;++i)
+		int								nface=0;
+		sf>>nface;sf>>hasbounds;
+		for(int i=0;i<nface;++i)
 		{
-		int			index=0;
-		int			bound=0;
-		int			ni[3];
-		sf>>index;
-		sf>>ni[0];sf>>ni[1];sf>>ni[2];
-		sf>>bound;
-		psb->appendFace(ni[0],ni[1],ni[2]);	
-		if(btetralinks)
+			int			index=0;
+			int			bound=0;
+			int			ni[3];
+			sf>>index;
+			sf>>ni[0];sf>>ni[1];sf>>ni[2];
+			sf>>bound;
+			psb->appendFace(ni[0], ni[1], ni[2]);	
+			if(btetralinks)
 			{
-			psb->appendLink(ni[0],ni[1],0,true);
-			psb->appendLink(ni[1],ni[2],0,true);
-			psb->appendLink(ni[2],ni[0],0,true);
+				psb->appendLink(ni[0], ni[1],0, true);
+				psb->appendLink(ni[1], ni[2],0, true);
+				psb->appendLink(ni[2], ni[0],0, true);
 			}
 		}
 	}

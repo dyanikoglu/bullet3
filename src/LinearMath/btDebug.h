@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2003-2006 Gino van den Bergen / Erwin Coumans  http://continuousphysics.com/Bullet/
+Copyright (c) 2013 Dr.Chat / Erwin Coumans  http://bullet.googlecode.com
 
 This software is provided 'as-is', without any express or implied warranty.
 In no event will the authors be held liable for any damages arising from the use of this software.
@@ -12,30 +12,24 @@ subject to the following restrictions:
 3. This notice may not be removed or altered from any source distribution.
 */
 
-#ifndef BT_GEN_RANDOM_H
-#define BT_GEN_RANDOM_H
+#ifndef BT_DEBUG_H
+#define BT_DEBUG_H
 
-#include "btScalar.h"
+// TODO: Do we want versions of these with source information?
+// Can't really do this due to limitations of compiler macros (vararg support for macros changes per compiler)
 
-#ifdef MT19937
+void btDbgMsgInternal(const char *fmt, ...);
+void btDbgWarningInternal(const char *fmt, ...);
 
-#include <limits.h>
-#include <mt19937.h>
+#define btDbgMsg btDbgMsgInternal
+#define btDbgWarning btDbgWarningInternal
 
-#define GEN_RAND_MAX UINT_MAX
+typedef void (*btDbgMsgFn)(const char *str);
 
-SIMD_FORCE_INLINE void GEN_srand(unsigned int seed) { init_genrand(seed); }
-SIMD_FORCE_INLINE unsigned int GEN_rand() { return genrand_int32(); }
+// Sets a user function for bullet debug messages
+// Call with NULL to reset back to default bullet ones.
 
-#else
+void btSetDbgMsgFn(btDbgMsgFn fn);
+void btSetDbgWarnFn(btDbgMsgFn fn);
 
-#include <stdlib.h>
-
-#define GEN_RAND_MAX RAND_MAX
-
-SIMD_FORCE_INLINE void GEN_srand(unsigned int seed) { srand(seed); }
-SIMD_FORCE_INLINE unsigned int GEN_rand() { return rand(); }
-
-#endif
-
-#endif  //BT_GEN_RANDOM_H
+#endif  // BT_DEBUG_H

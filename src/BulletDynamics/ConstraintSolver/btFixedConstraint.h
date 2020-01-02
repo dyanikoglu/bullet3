@@ -25,6 +25,8 @@ public:
 	btFixedConstraint(btRigidBody & rbA, btRigidBody & rbB, const btTransform& frameInA, const btTransform& frameInB);
 
 	virtual ~btFixedConstraint();
+
+	virtual void debugDraw(btIDebugDraw * debugDraw);
 };
 
 #endif  //BT_FIXED_CONSTRAINT_H
