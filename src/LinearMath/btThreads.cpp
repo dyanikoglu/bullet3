@@ -35,11 +35,10 @@ subject to the following restrictions:
 
 // use Intel Threading Building Blocks for thread management
 #define __TBB_NO_IMPLICIT_LINKAGE 1
-#include <tbb/tbb.h>
-#include <tbb/task_scheduler_init.h>
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
-
+#include <tbb/task_scheduler_init.h>
+#include <tbb/parallel_reduce.h>
 #endif  // #if BT_USE_TBB && BT_THREADSAFE
 
 #if BT_THREADSAFE
@@ -50,7 +49,7 @@ subject to the following restrictions:
 // context switching.
 //
 
-#if __cplusplus >= 201103L
+#if __cplusplus >= 201103L || _MSC_VER >= 1900
 
 // for anything claiming full C++11 compliance, use C++11 atomics
 // on GCC or Clang you need to compile with -std=c++11

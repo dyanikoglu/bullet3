@@ -24,7 +24,9 @@
 	end
 
 	projectRootDir = os.getcwd() .. "/../"
+	projectThirdPartyDir = os.getcwd() .. "/../../"
 	print("Project root directory: " .. projectRootDir);
+	print("Project third party directory: " .. projectThirdPartyDir);
 	
 	newoption {
 		trigger     = "ios",
@@ -360,6 +362,24 @@ end
 		trigger = "openmp_support",
 		description = "enable OpenMP support for multithreading"
 	}
+
+	newoption
+	{
+		trigger = "tbb_support",
+		description = "enable TBB support for multithreading"
+	}
+
+	if _OPTIONS["tbb_support"] then
+		defines {"BT_USE_TBB=1"}
+		function initTBB()
+			includedirs {projectThirdPartyDir .. "tbb/include"}
+			libdirs {projectThirdPartyDir .. "tbb/lib/ia32/vc14"}
+			links { "tbb.lib"}
+		end
+		function findTBB()
+			return true
+		end
+	end
 
 	if _OPTIONS["openmp_support"] then
 		defines {"BT_USE_OPENMP=1"}

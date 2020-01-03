@@ -13,3 +13,7 @@
 		"TaskScheduler/*.cpp",
 		"TaskScheduler/*.h"
 	}
+
+	if findTBB() then
+		initTBB()
+	end
