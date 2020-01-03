@@ -18,7 +18,7 @@
 	}
 
 
-	if os.is("Windows") then
+	if os.istarget("Windows") then
 		--see http://stackoverflow.com/questions/12558327/google-test-in-visual-studio-2012
 		defines {"_VARIADIC_MAX=10"}
 	end
@@ -29,7 +29,7 @@
 		"test_invdyn_kinematics.cpp",
 	}
 
-	if os.is("Linux") then
+	if os.istarget("Linux") then
                 links {"pthread"}
         end
 
@@ -57,7 +57,7 @@
         }
 
 
-        if os.is("Windows") then
+        if os.istarget("Windows") then
                 --see http://stackoverflow.com/questions/12558327/google-test-in-visual-studio-2012
                 defines {"_VARIADIC_MAX=10"}
         end
@@ -68,7 +68,7 @@
                 "test_invdyn_jacobian.cpp",
         }
 
-        if os.is("Linux") then
+        if os.istarget("Linux") then
                 links {"pthread"}
         end
 
@@ -90,7 +90,7 @@
         }
 
 
-        if os.is("Windows") then
+        if os.istarget("Windows") then
                 --see http://stackoverflow.com/questions/12558327/google-test-in-visual-studio-2012
                 defines {"_VARIADIC_MAX=10"}
         end
@@ -130,7 +130,7 @@
   
 	}
 
-        if os.is("Linux") then
+        if os.istarget("Linux") then
                 links {"pthread"}
         end
         

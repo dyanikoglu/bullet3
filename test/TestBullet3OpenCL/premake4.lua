@@ -6,7 +6,7 @@ function createProject(vendor)
 	
 --	defines {  }
 	
-	if os.is("Windows") then
+	if os.istarget("Windows") then
 		--see http://stackoverflow.com/questions/12558327/google-test-in-visual-studio-2012
 		defines {"_VARIADIC_MAX=10"}
 	end
@@ -46,14 +46,14 @@ function createProject(vendor)
 		"../OpenCL/AllBullet3Kernels/*.cpp"
 		
 	}
-	if os.is("Windows") then
+	if os.istarget("Windows") then
 	end
 
-	if os.is("Linux") then 
+	if os.istarget("Linux") then 
 		links {"pthread"}
 	end
 
-	if os.is("MacOSX") then
+	if os.istarget("MacOSX") then
 	end
 end
 

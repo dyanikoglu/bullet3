@@ -4,7 +4,7 @@
 	end
 
 	function findOpenCL_Apple()
---		if os.is("macosx") then
+--		if os.istarget("macosx") then
 --			return true	
 --		else
 			return false
@@ -29,13 +29,13 @@
 	end
 
 	function findOpenCL_Intel()
---		if os.is("Windows") then
+--		if os.istarget("Windows") then
 --			local intelopenclpath = os.getenv("INTELOCLSDKROOT")
 --			if (intelopenclpath) then
 --			return true
 --			end
 --		end
---		if os.is("Linux") then
+--		if os.istarget("Linux") then
 --			local intelsdk = io.open("/usr/include/CL/opencl.h","r")
 --			if (intelsdk) then
 --				return true;
@@ -54,7 +54,7 @@
 			projectRootDir .. "src/clew/clew.c",
 			projectRootDir .. "src/clew/clew.h"
 		}
-		 if os.is("Linux") then
+		 if os.istarget("Linux") then
         	        links {"dl"}
         	end
 	end
@@ -112,7 +112,7 @@
 
 	function initOpenCL_Intel()
 		configuration {}
-		if os.is("Windows") then
+		if os.istarget("Windows") then
 		local intelopenclpath = os.getenv("INTELOCLSDKROOT")
 		if (intelopenclpath) then
 			defines { "ADL_ENABLE_CL" , "CL_PLATFORM_INTEL"}
@@ -128,7 +128,7 @@
 			return true
 		end
 		end
-		if os.is("Linux") then
+		if os.istarget("Linux") then
 			defines { "ADL_ENABLE_CL" , "CL_PLATFORM_INTEL"}
                         configuration {}
                         links {"OpenCL"}

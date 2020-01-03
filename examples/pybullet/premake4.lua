@@ -33,7 +33,7 @@ project ("pybullet")
                 "../ThirdPartyLibs",
                 }
 
-	if os.is("MacOSX") then
+	if os.istarget("MacOSX") then
 --		targetextension {"so"}
 		links{"Cocoa.framework","Python"}
 	end
@@ -52,14 +52,14 @@ if not _OPTIONS["no-enet"] then
 
 		includedirs {"../../examples/ThirdPartyLibs/enet/include"}
 	
-		if os.is("Windows") then 
+		if os.istarget("Windows") then 
 --			targetextension {"dylib"}
 			defines { "WIN32" }
 			links {"Ws2_32","Winmm"}
 		end
-		if os.is("Linux") then
+		if os.istarget("Linux") then
 		end
-		if os.is("MacOSX") then
+		if os.istarget("MacOSX") then
 		end		
 		
 		links {"enet"}		
@@ -77,14 +77,14 @@ if not _OPTIONS["no-enet"] then
 
                 includedirs {"../../examples/ThirdPartyLibs/clsocket/src"}
 
-		 if os.is("Windows") then
+		 if os.istarget("Windows") then
                 	defines { "WIN32" }
                 	links {"Ws2_32","Winmm"}
        		 end
-        	if os.is("Linux") then
+        	if os.istarget("Linux") then
                 	defines {"_LINUX"}
         	end
-        	if os.is("MacOSX") then
+        	if os.istarget("MacOSX") then
                 	defines {"_DARWIN"}
         	end
 
@@ -261,7 +261,7 @@ end
 		_OPTIONS["python_lib_dir"]
 	}
 	
-	if os.is("Linux") then
+	if os.istarget("Linux") then
        		initX11()
 	end
 

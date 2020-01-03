@@ -8,14 +8,14 @@ project ("App_PhysicsServerSharedMemoryBridgeTCP")
 	includedirs {"../../ThirdPartyLibs/clsocket/src","../../../src",".."}
 		
 
-	if os.is("Windows") then
+	if os.istarget("Windows") then
                 defines { "WIN32" }
                 links {"Ws2_32","Winmm"}
         end
-        if os.is("Linux") then
+        if os.istarget("Linux") then
                 defines {"_LINUX"}
         end
-        if os.is("MacOSX") then
+        if os.istarget("MacOSX") then
                 defines {"_DARWIN"}
         end
 		
@@ -67,15 +67,15 @@ links {
 
 
 
-	if os.is("Windows") then
+	if os.istarget("Windows") then
                 defines { "WIN32" }
                 links {"Ws2_32","Winmm"}
         end
-        if os.is("Linux") then
+        if os.istarget("Linux") then
                 defines {"_LINUX"}
                 links{"dl"}
         end
-        if os.is("MacOSX") then
+        if os.istarget("MacOSX") then
                 defines {"_DARWIN"}
         end
 

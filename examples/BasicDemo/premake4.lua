@@ -55,9 +55,9 @@ files {
 	"../Utils/b3Clock.h",
 }
 
-if os.is("Linux") then initX11() end
+if os.istarget("Linux") then initX11() end
 
-if os.is("MacOSX") then
+if os.istarget("MacOSX") then
         links{"Cocoa.framework"}
 end
                           
@@ -103,9 +103,9 @@ files {
 	"../Utils/b3Clock.h",
 }
 
-if os.is("Linux") then initX11() end
+if os.istarget("Linux") then initX11() end
 
-if os.is("MacOSX") then
+if os.istarget("MacOSX") then
         links{"Cocoa.framework"}
 end
                           
@@ -197,13 +197,13 @@ files {
 				"../Utils/ChromeTraceUtil.h",
 }
 
-if os.is("Windows") then 
+if os.istarget("Windows") then 
 	libdirs {"../ThirdPartyLibs/openvr/lib/win32"}
 end
 
-if os.is("Linux") then initX11() end
+if os.istarget("Linux") then initX11() end
 
-if os.is("MacOSX") then
+if os.istarget("MacOSX") then
         links{"Cocoa.framework"}
 end
 

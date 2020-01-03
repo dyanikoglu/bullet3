@@ -1,7 +1,7 @@
 
 	function findOpenGL()
 		configuration{}
-		if os.is("Linux") then
+		if os.istarget("Linux") then
 			return true
 		end
 		--assume OpenGL is available on Mac OSX, Windows etc
@@ -10,7 +10,7 @@
 
       function findOpenGL3()
                 configuration{}
-                if os.is("MacOSX") then
+                if os.istarget("MacOSX") then
                         local osversion = os.getversion()
 		--Mac OSX 10.9 and above supports OpenGL 3, below doesn't, so ...
                         if osversion.majorversion > 10 or (osversion.majorversion == 10 and osversion.minorversion >=9) then
@@ -31,7 +31,7 @@
 		configuration {"MacOSX"}
  			links { "OpenGL.framework"} 
 		configuration {"not Windows", "not MacOSX"}
-		if os.is("Linux") then	
+		if os.istarget("Linux") then	
 			if  _OPTIONS["enable_system_opengl"] and (os.isdir("/usr/include") and os.isfile("/usr/include/GL/gl.h")) then
 				links {"GL"}
 			else
@@ -46,7 +46,7 @@
 
 	function initGlew()
 		configuration {}
-		if os.is("Windows") then
+		if os.istarget("Windows") then
 			configuration {"Windows"}
 			defines { "GLEW_STATIC"}
 			includedirs {
@@ -54,14 +54,14 @@
 			}
 			files { projectRootDir .. "examples/ThirdPartyLibs/glad/gl.c"}
 		end
-		if os.is("MacOSX") then
+		if os.istarget("MacOSX") then
 			 includedirs {
                                         projectRootDir .. "examples/ThirdPartyLibs/glad"
                                 }
                                 files { projectRootDir .. "examples/ThirdPartyLibs/glad/gl.c"}
 		end
 
-		if os.is("Linux") then
+		if os.istarget("Linux") then
 			configuration{"Linux"}
 				if  _OPTIONS["enable_system_glx"] then --# and (os.isdir("/usr/include") and os.isfile("/usr/include/GL/glx.h")) then
                                 	links{"X11","pthread"}
@@ -87,7 +87,7 @@
 	end
 
 	function initX11()
-		if os.is("Linux") then
+		if os.istarget("Linux") then
 			if _OPTIONS["enable_system_x11"] and (os.isdir("/usr/include") and os.isfile("/usr/include/X11/X.h")) then
 				links{"X11","pthread"}
 			else

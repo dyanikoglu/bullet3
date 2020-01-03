@@ -8,11 +8,11 @@ project ("App_LuaStandalone")
 	targetdir "../../../../bin"
 	includedirs {"../src"}
 	
-	if os.is("Windows") then 
+	if os.istarget("Windows") then 
 	end
-	if os.is("Linux") then
+	if os.istarget("Linux") then
 	end
-	if os.is("MacOSX") then
+	if os.istarget("MacOSX") then
 	end		
 		
 	links {"lua-5.2.3"}		

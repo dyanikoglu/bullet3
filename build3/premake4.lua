@@ -6,7 +6,7 @@
    		osversion.majorversion, osversion.minorversion, osversion.revision,
    		osversion.description))
 
-	if _ACTION == "vs2010" or _ACTION=="vs2008" then
+	if _ACTION=="vs2013" or _ACTION == "vs2010" or _ACTION=="vs2008" then
 		buildoptions
 		{
 			-- Multithreaded compiling
@@ -101,21 +101,21 @@
 	
 	}
 
-	if os.is("Linux") then
+	if os.istarget("Linux") then
                 default_grpc_include_dir = "usr/local/include/GRPC"
                 default_grpc_lib_dir = "/usr/local/lib"
                 default_protobuf_include_dir = "/usr/local/include/protobuf"
                 default_protobuf_lib_dir = "/usr/local/lib"
 	end
 
-	if os.is("macosx") then
+	if os.istarget("macosx") then
                 default_grpc_include_dir = "/usr/local/Cellar/grpc/1.14.1/include"
                 default_grpc_lib_dir = "/usr/local/Cellar/grpc/1.14.1/lib"
 								default_protobuf_include_dir = "/usr/local/Cellar/protobuf/3.6.0/include"
                 default_protobuf_lib_dir = "/usr/local/Cellar/protobuf/3.6.0/lib"
 	end
 
-	if os.is("Windows") then
+	if os.istarget("Windows") then
                 default_grpc_include_dir = projectRootDir .. "examples/ThirdPartyLibs/grpc/include"
                 default_grpc_lib_dir = projectRootDir .. "examples/ThirdPartyLibs/grpc/lib"
                 default_protobuf_include_dir =projectRootDir .. "examples/ThirdPartyLibs/grpc/include"
@@ -191,17 +191,17 @@
 			
 			defines {"BT_ENABLE_GRPC"}
 			
-				if os.is("macosx") then
+				if os.istarget("macosx") then
 			 buildoptions { "-std=c++11" }
 			 links{ "dl"}
 			end
 			
-			if os.is("Linux") then
+			if os.istarget("Linux") then
 			 		buildoptions { "-std=c++11" }
 					links{ "dl"}
 			end
 			
-			if os.is("Windows") then
+			if os.istarget("Windows") then
 					defines {"_WIN32_WINNT=0x0600"}
 					links{ "zlibstatic","ssl","crypto"}
 			end
@@ -210,7 +210,7 @@
              projectRootDir .. "examples", _OPTIONS["grpc_include_dir"], _OPTIONS["protobuf_include_dir"],
       }
 
-			if os.is("Windows") then
+			if os.istarget("Windows") then
 				configuration {"x64", "debug"}			
 						libdirs {_OPTIONS["grpc_lib_dir"] .. "/win64_debug" , _OPTIONS["protobuf_lib_dir"] .. "win64_debug",}
 				configuration {"x86", "debug"}
@@ -282,13 +282,13 @@
                 description = "Enable high-level Python scripting of Bullet with URDF/SDF import and synthetic camera."
         }
 
-if os.is("Linux") then
+if os.istarget("Linux") then
  		default_python_include_dir = "/usr/include/python2.7"
  		default_python_lib_dir = "/usr/local/lib/"
 end
 
 		
-if os.is("Windows") then
+if os.istarget("Windows") then
  		default_python_include_dir = "C:/Python-3.5.2/include"
  		default_python_lib_dir = "C:/Python-3.5.2/libs"
 end
@@ -363,12 +363,20 @@ end
 
 	configurations {"Release", "Debug"}
 	configuration "Release"
-		flags { "Optimize", "EnableSSE2","StaticRuntime", "NoMinimalRebuild", "FloatFast"}
+		flags {"NoMinimalRebuild"}
+		staticruntime "On"
+		optimize "On"
+		floatingpoint "Fast"
+		vectorextensions "SSE2"
 	configuration "Debug"
 		defines {"_DEBUG=1"}
-		flags { "Symbols", "StaticRuntime" , "NoMinimalRebuild", "NoEditAndContinue" ,"FloatFast"}
+		flags {"NoMinimalRebuild"}
+		editandcontinue "Off"
+		symbols "On"
+		staticruntime "On"
+		floatingpoint "Fast"
 
-	if os.is("Linux") or os.is("macosx") then
+	if os.istarget("Linux") or os.istarget("macosx") then
 		if os.is64bit() then
 			platforms {"x64"}
 		else
@@ -436,19 +444,19 @@ end
 			_OPTIONS["python_lib_dir"] = default_python_lib_dir
 	end
 
-if os.is("Linux") then
+if os.istarget("Linux") then
                 default_glfw_include_dir = "usr/local/include/GLFW"
                 default_glfw_lib_dir = "/usr/local/lib/"
 		default_glfw_lib_name = "glfw3"
 end
 
-if os.is("macosx") then
+if os.istarget("macosx") then
 		default_glfw_include_dir = "/usr/local/Cellar/glfw/3.2.1/include"
 		default_glfw_lib_dir = "/usr/local/Cellar/glfw/3.2.1/lib"
 		default_glfw_lib_name = "glfw"
 end
 
-if os.is("Windows") then
+if os.istarget("Windows") then
                 default_glfw_include_dir = "c:/glfw/include"
                 default_glfw_lib_dir = "c:/glfw/lib"
 		default_glfw_lib_name = "glfw3"

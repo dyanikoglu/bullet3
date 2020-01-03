@@ -20,7 +20,7 @@
 		"main.cpp",
 		"b3ThreadSupportInterface.h"
 	}
-	if os.is("Windows") then
+	if os.istarget("Windows") then
 
 		files {
                 "b3Win32ThreadSupport.cpp",  
@@ -30,7 +30,7 @@
 		--defines {"__WINDOWS_MM__", "WIN32"}
 	end
 
-	if os.is("Linux") then 
+	if os.istarget("Linux") then 
 		files {
                 "b3PosixThreadSupport.cpp",  
                 "b3PosixThreadSupport.h"    
@@ -39,7 +39,7 @@
 		links {"pthread"}
 	end
 
-	if os.is("MacOSX") then
+	if os.istarget("MacOSX") then
 		files {
                 "b3PosixThreadSupport.cpp",
                 "b3PosixThreadSupport.h"    

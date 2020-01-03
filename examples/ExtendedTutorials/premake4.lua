@@ -98,9 +98,9 @@ files {
 			"../Utils/b3Clock.h",
 }
 
-if os.is("Linux") then initX11() end
+if os.istarget("Linux") then initX11() end
 
-if os.is("MacOSX") then
+if os.istarget("MacOSX") then
         links{"Cocoa.framework"}
 end
                           
@@ -164,9 +164,9 @@ files {
 			"../ThirdPartyLibs/stb_image/stb_image.cpp",     
 }
 
-if os.is("Linux") then initX11() end
+if os.istarget("Linux") then initX11() end
 
-if os.is("MacOSX") then
+if os.istarget("MacOSX") then
         links{"Cocoa.framework"}
 end
                           

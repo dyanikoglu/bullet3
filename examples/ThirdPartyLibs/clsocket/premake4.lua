@@ -2,13 +2,13 @@
 		
 	kind "StaticLib"
 	
-	if os.is("Windows") then 
+	if os.istarget("Windows") then 
 		defines { "WIN32","_WINSOCK_DEPRECATED_NO_WARNINGS" }
 		end
-		if os.is("Linux") then
+		if os.istarget("Linux") then
 		 defines {"HAS_SOCKLEN_T","_LINUX"}
 		end
-		if os.is("MacOSX") then
+		if os.istarget("MacOSX") then
 		 defines {"HAS_SOCKLEN_T","_DARWIN"}
 		end		
 		
@@ -16,7 +16,7 @@
 	includedirs {
 		".","include","src"
 	}
-    if os.is("Linux") then
+    if os.istarget("Linux") then
         buildoptions{"-fPIC"}
     end
 	files {

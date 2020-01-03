@@ -8,13 +8,13 @@ project ("Test_enet_nat_punchthrough_client")
 	
 	includedirs {"../../../../examples/ThirdPartyLibs/enet/include"}
 	
-	if os.is("Windows") then 
+	if os.istarget("Windows") then 
 		defines { "WIN32" }
 		links {"Ws2_32","Winmm"}
 	end
-	if os.is("Linux") then
+	if os.istarget("Linux") then
 	end
-	if os.is("MacOSX") then
+	if os.istarget("MacOSX") then
 	end		
 		
 	links {"enet"}		

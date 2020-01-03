@@ -20,19 +20,19 @@
 
 		links {"Bullet3Common"}
 
-		if os.is("Windows") then
+		if os.istarget("Windows") then
 			links {"winmm","Wsock32","dsound"}
 			defines {"WIN32","__WINDOWS_MM__","__WINDOWS_DS__"}
 		end
 
 		
-if os.is("Linux") then initX11() 
+if os.istarget("Linux") then initX11() 
                 defines  {"__OS_LINUX__","__LINUX_ALSA__"}
 	links {"asound","pthread"}
 end
 
 
-if os.is("MacOSX") then
+if os.istarget("MacOSX") then
 	links{"Cocoa.framework"}
 	links{"CoreAudio.framework", "coreMIDI.framework", "Cocoa.framework"}
 

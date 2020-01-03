@@ -7,10 +7,10 @@
 	 
 	defines { "LUA_COMPAT_ALL"}
 
-	if os.is("Linux") then
+	if os.istarget("Linux") then
 		defines {"LUA_USE_LINUX"}
 	end
-	if os.is("MacOSX") then
+	if os.istarget("MacOSX") then
 		defines {"LUA_USE_MACOSX"}
 	end
 		
@@ -18,7 +18,7 @@
 	includedirs {
 		"src"
 	}
-    if os.is("Linux") then
+    if os.istarget("Linux") then
         buildoptions{"-fPIC"}
     end
 	files {

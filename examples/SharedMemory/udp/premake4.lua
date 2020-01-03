@@ -7,16 +7,16 @@ project ("App_PhysicsServerSharedMemoryBridgeUDP")
 	
 	includedirs {"../../ThirdPartyLibs/enet/include","../../../src",".."}
 		
-	if os.is("Windows") then 
+	if os.istarget("Windows") then 
 			defines { "WIN32" }
 			
 
 		links {"Ws2_32","Winmm"}
 	end
-	if os.is("Linux") then
+	if os.istarget("Linux") then
 	    links{"dl"}
 	end
-	if os.is("MacOSX") then
+	if os.istarget("MacOSX") then
 	end		
 		
 	
@@ -65,11 +65,11 @@ links {
 	"enet","Bullet3Common","BulletInverseDynamicsUtils", "BulletInverseDynamics",	"BulletSoftBody",  "BulletDynamics","BulletCollision", "LinearMath", "BussIK"
 }
 
-if os.is("Windows") then 
+if os.istarget("Windows") then 
 	defines { "WIN32" }
 	links {"Ws2_32","Winmm"}
 end
-	if os.is("Linux") then
+	if os.istarget("Linux") then
 	    links{"dl"}
 	end
 

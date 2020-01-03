@@ -22,8 +22,8 @@
 		"../Utils/b3ResourcePath.cpp"
 		}
 		
-if os.is("Linux") then initX11() end
+if os.istarget("Linux") then initX11() end
 
-if os.is("MacOSX") then
+if os.istarget("MacOSX") then
 	links{"Cocoa.framework"}
 end

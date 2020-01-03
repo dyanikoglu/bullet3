@@ -32,7 +32,7 @@ project ("App_RobotSimulator")
                 }
 
 
-	if os.is("MacOSX") then
+	if os.istarget("MacOSX") then
 		links{"Cocoa.framework"}
 	end
 
@@ -41,14 +41,14 @@ if not _OPTIONS["no-enet"] then
 
 		includedirs {"../../examples/ThirdPartyLibs/enet/include"}
 	
-		if os.is("Windows") then 
+		if os.istarget("Windows") then 
 --			targetextension {"dylib"}
 			defines { "WIN32" }
 			links {"Ws2_32","Winmm"}
 		end
-		if os.is("Linux") then
+		if os.istarget("Linux") then
 		end
-		if os.is("MacOSX") then
+		if os.istarget("MacOSX") then
 		end		
 		
 		links {"enet"}		
@@ -66,14 +66,14 @@ if not _OPTIONS["no-enet"] then
 
                 includedirs {"../../examples/ThirdPartyLibs/clsocket/src"}
 
-		 if os.is("Windows") then
+		 if os.istarget("Windows") then
                 	defines { "WIN32" }
                 	links {"Ws2_32","Winmm"}
        		 end
-        	if os.is("Linux") then
+        	if os.istarget("Linux") then
                 	defines {"_LINUX"}
         	end
-        	if os.is("MacOSX") then
+        	if os.istarget("MacOSX") then
                 	defines {"_DARWIN"}
         	end
 
@@ -106,18 +106,18 @@ if not _OPTIONS["no-enet"] then
 				links {"serial"}
 			end
 			
-			if os.is("Windows") then
+			if os.istarget("Windows") then
 				links {"winmm","Wsock32","dsound"}
 				defines {"WIN32","__WINDOWS_MM__","__WINDOWS_DS__"}
 			end
 			
-			if os.is("Linux") then initX11() 
+			if os.istarget("Linux") then initX11() 
 			                defines  {"__OS_LINUX__","__LINUX_ALSA__"}
 				links {"asound","pthread"}
 			end
 
 
-			if os.is("MacOSX") then
+			if os.istarget("MacOSX") then
 				links{"Cocoa.framework"}
 				links{"CoreAudio.framework", "coreMIDI.framework", "Cocoa.framework"}
 				defines {"__OS_MACOSX__","__MACOSX_CORE__"}
@@ -139,7 +139,7 @@ if (_OPTIONS["enable_static_vr_plugin"]) then
 	files {"../../examples/SharedMemory/plugins/vrSyncPlugin/vrSyncPlugin.cpp"}
 end
 
-	if os.is("Linux") then
+	if os.istarget("Linux") then
        		initX11()
 	end
 
@@ -168,7 +168,7 @@ project ("App_VRGloveHandSimulator")
                 }
 
 
-	if os.is("MacOSX") then
+	if os.istarget("MacOSX") then
 		links{"Cocoa.framework"}
 	end
 
@@ -199,18 +199,18 @@ project ("App_VRGloveHandSimulator")
 			includedirs {"../../examples/ThirdPartyLibs/serial/include"}
 			links {"serial"}
 		
-			if os.is("Windows") then
+			if os.istarget("Windows") then
 				links {"winmm","Wsock32","dsound"}
 				defines {"WIN32","__WINDOWS_MM__","__WINDOWS_DS__"}
 			end
 			
-			if os.is("Linux") then initX11() 
+			if os.istarget("Linux") then initX11() 
 			                defines  {"__OS_LINUX__","__LINUX_ALSA__"}
 				links {"asound","pthread"}
 			end
 
 
-			if os.is("MacOSX") then
+			if os.istarget("MacOSX") then
 				links{"Cocoa.framework"}
 				links{"CoreAudio.framework", "coreMIDI.framework", "Cocoa.framework"}
 				defines {"__OS_MACOSX__","__MACOSX_CORE__"}
@@ -227,7 +227,7 @@ if (_OPTIONS["enable_static_vr_plugin"]) then
 	files {"../../examples/SharedMemory/plugins/vrSyncPlugin/vrSyncPlugin.cpp"}
 end
 
-	if os.is("Linux") then
+	if os.istarget("Linux") then
        		initX11()
 	end
 end
@@ -251,13 +251,13 @@ if not _OPTIONS["no-enet"] then
 
 		includedirs {"../../examples/ThirdPartyLibs/enet/include"}
 	
-		if os.is("Windows") then 
+		if os.istarget("Windows") then 
 			defines { "WIN32" }
 			links {"Ws2_32","Winmm"}
 		end
-		if os.is("Linux") then
+		if os.istarget("Linux") then
 		end
-		if os.is("MacOSX") then
+		if os.istarget("MacOSX") then
 		end		
 		links {"enet"}		
 		defines {"BT_ENABLE_ENET"}
@@ -267,14 +267,14 @@ if not _OPTIONS["no-enet"] then
 
 		includedirs {"../../examples/ThirdPartyLibs/clsocket/src"}
 
-		if os.is("Windows") then
+		if os.istarget("Windows") then
     		defines { "WIN32" }
         links {"Ws2_32","Winmm"}
     end
-    if os.is("Linux") then
+    if os.istarget("Linux") then
     	defines {"_LINUX"}
     end
-		if os.is("MacOSX") then
+		if os.istarget("MacOSX") then
     	defines {"_DARWIN"}
 		end
 
@@ -282,12 +282,12 @@ if not _OPTIONS["no-enet"] then
     defines {"BT_ENABLE_CLSOCKET"}
 	end
 
-	if os.is("MacOSX") then
+	if os.istarget("MacOSX") then
 		links{"Cocoa.framework"}
 	end
 
 	
-	if os.is("Linux") then initX11()
+	if os.istarget("Linux") then initX11()
                      links {"pthread"}
         end
 

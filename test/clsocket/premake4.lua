@@ -8,14 +8,14 @@ project ("Test_clsocket_EchoServer")
 	
 	includedirs {"../../examples/ThirdPartyLibs/clsocket/src"}
 	
-	if os.is("Windows") then 
+	if os.istarget("Windows") then 
 		defines { "WIN32" }
 		links {"Ws2_32","Winmm"}
 	end
-	if os.is("Linux") then
+	if os.istarget("Linux") then
 		defines {"_LINUX"}
 	end
-	if os.is("MacOSX") then
+	if os.istarget("MacOSX") then
 		defines {"_DARWIN"}
 	end		
 		
@@ -36,15 +36,15 @@ project ("Test_clsocket_QueryDayTime")
 	
 	includedirs {"../../examples/ThirdPartyLibs/clsocket/src"}
 	
-	if os.is("Windows") then 
+	if os.istarget("Windows") then 
 		defines { "WIN32" }
 		links {"Ws2_32","Winmm"}
 	end
 
-	if os.is("Linux") then
+	if os.istarget("Linux") then
                 defines {"_LINUX"}
         end
-        if os.is("MacOSX") then
+        if os.istarget("MacOSX") then
                 defines {"_DARWIN"}
         end
 

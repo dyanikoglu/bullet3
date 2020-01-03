@@ -12,7 +12,7 @@ project ("pybullet_vrSyncPlugin")
 	links{"BulletFileLoader", "Bullet3Common", "LinearMath"}
 
 
-	if os.is("MacOSX") then
+	if os.istarget("MacOSX") then
 --		targetextension {"so"}
 		links{"Cocoa.framework","Python"}
 	end

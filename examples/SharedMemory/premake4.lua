@@ -12,7 +12,7 @@ includedirs {".","../../src", "../ThirdPartyLibs"}
 links {
 	"BulletSoftBody", "Bullet3Common","BulletInverseDynamicsUtils", "BulletInverseDynamics",	"BulletDynamics","BulletCollision", "LinearMath", "BussIK"
 }
-if os.is("Linux") then
+if os.istarget("Linux") then
     links{"dl"}
 end
 
@@ -142,7 +142,7 @@ files {
 		"../MultiThreading/b3ThreadSupportInterface.cpp",
 		"../MultiThreading/b3ThreadSupportInterface.h"
 	}
-	if os.is("Windows") then
+	if os.istarget("Windows") then
 
 		files {
                 "../MultiThreading/b3Win32ThreadSupport.cpp",  
@@ -152,7 +152,7 @@ files {
 		--defines {"__WINDOWS_MM__", "WIN32"}
 	end
 
-	if os.is("Linux") then 
+	if os.istarget("Linux") then 
 		files {
                 "../MultiThreading/b3PosixThreadSupport.cpp",  
                 "../MultiThreading/b3PosixThreadSupport.h"    
@@ -161,7 +161,7 @@ files {
 		links {"pthread"}
 	end
 
-	if os.is("MacOSX") then
+	if os.istarget("MacOSX") then
 		files {
                 "../MultiThreading/b3PosixThreadSupport.cpp",
                 "../MultiThreading/b3PosixThreadSupport.h"    
@@ -205,17 +205,17 @@ language "C++"
 	        	"../ThirdPartyLibs/midi/RtMidi.h",
 	        	"../ThirdPartyLibs/midi/RtError.h",
         	} 
-			if os.is("Windows") then
+			if os.istarget("Windows") then
 				links {"winmm"}
 				defines {"__WINDOWS_MM__", "WIN32"}
 			end
 
-			if os.is("Linux") then 
+			if os.istarget("Linux") then 
 				defines {"__LINUX_ALSA__"}
 			  links {"asound","pthread"}
 			end
 
-			if os.is("MacOSX") then
+			if os.istarget("MacOSX") then
 				links{"CoreAudio.framework", "coreMIDI.framework", "Cocoa.framework"}
 				defines {"__MACOSX_CORE__"}
 			end
@@ -251,9 +251,9 @@ if (_OPTIONS["enable_static_vr_plugin"]) then
 end
 
 
-if os.is("Linux") then initX11() end
+if os.istarget("Linux") then initX11() end
 
-if os.is("MacOSX") then
+if os.istarget("MacOSX") then
         links{"Cocoa.framework"}
 end
 
@@ -262,7 +262,7 @@ files {
 		"../MultiThreading/b3ThreadSupportInterface.cpp",
 		"../MultiThreading/b3ThreadSupportInterface.h"
 	}
-if os.is("Windows") then
+if os.istarget("Windows") then
 
 	files {
               "../MultiThreading/b3Win32ThreadSupport.cpp",  
@@ -272,7 +272,7 @@ if os.is("Windows") then
 	--defines {"__WINDOWS_MM__", "WIN32"}
 end
 
-if os.is("Linux") then 
+if os.istarget("Linux") then 
 	files {
               "../MultiThreading/b3PosixThreadSupport.cpp",  
               "../MultiThreading/b3PosixThreadSupport.h"    
@@ -281,7 +281,7 @@ if os.is("Linux") then
 	links {"pthread"}
 end
 
-if os.is("MacOSX") then
+if os.istarget("MacOSX") then
 	files {
               "../MultiThreading/b3PosixThreadSupport.cpp",
               "../MultiThreading/b3PosixThreadSupport.h"    
@@ -294,7 +294,7 @@ end
 
 
 
-if os.is("Windows") then 
+if os.istarget("Windows") then 
 	project "App_PhysicsServer_SharedMemory_VR"
 	--for now, only enable VR under Windows, until compilation issues are resolved on Mac/Linux
 	defines {"B3_USE_STANDALONE_EXAMPLE","BT_ENABLE_VR"}
@@ -318,17 +318,17 @@ if os.is("Windows") then
 	        	"../ThirdPartyLibs/midi/RtMidi.h",
 	        	"../ThirdPartyLibs/midi/RtError.h",
         	} 
-			if os.is("Windows") then
+			if os.istarget("Windows") then
 				links {"winmm"}
 				defines {"__WINDOWS_MM__", "WIN32"}
 			end
 
-			if os.is("Linux") then 
+			if os.istarget("Linux") then 
 				defines {"__LINUX_ALSA__"}
 			  links {"asound","pthread"}
 			end
 
-			if os.is("MacOSX") then
+			if os.istarget("MacOSX") then
 				links{"CoreAudio.framework", "coreMIDI.framework", "Cocoa.framework"}
 				defines {"__MACOSX_CORE__"}
 			end
@@ -347,18 +347,18 @@ if os.is("Windows") then
 			
 			defines {"B3_ENABLE_TINY_AUDIO"}
 			
-			if os.is("Windows") then
+			if os.istarget("Windows") then
 				links {"winmm","Wsock32","dsound"}
 				defines {"WIN32","__WINDOWS_MM__","__WINDOWS_DS__"}
 			end
 			
-			if os.is("Linux") then initX11() 
+			if os.istarget("Linux") then initX11() 
 			                defines  {"__OS_LINUX__","__LINUX_ALSA__"}
 				links {"asound","pthread"}
 			end
 
 
-			if os.is("MacOSX") then
+			if os.istarget("MacOSX") then
 				links{"Cocoa.framework"}
 				links{"CoreAudio.framework", "coreMIDI.framework", "Cocoa.framework"}
 				defines {"__OS_MACOSX__","__MACOSX_CORE__"}
@@ -421,7 +421,7 @@ if (_OPTIONS["enable_static_vr_plugin"]) then
 	files {"plugins/vrSyncPlugin/vrSyncPlugin.cpp"}
 end
 
-	if os.is("Windows") then 
+	if os.istarget("Windows") then 
 		configuration {"x32"}
 			libdirs {"../ThirdPartyLibs/openvr/lib/win32"}
 		configuration {"x64"}
@@ -429,9 +429,9 @@ end
 		configuration{}
 	end
 	
-	if os.is("Linux") then initX11() end
+	if os.istarget("Linux") then initX11() end
 	
-	if os.is("MacOSX") then
+	if os.istarget("MacOSX") then
 	        links{"Cocoa.framework"}
 	end
 	
@@ -440,7 +440,7 @@ end
 			"../MultiThreading/b3ThreadSupportInterface.cpp",
 			"../MultiThreading/b3ThreadSupportInterface.h"
 		}
-		if os.is("Windows") then
+		if os.istarget("Windows") then
 	
 			files {
 	                "../MultiThreading/b3Win32ThreadSupport.cpp",  
@@ -450,7 +450,7 @@ end
 			--defines {"__WINDOWS_MM__", "WIN32"}
 		end
 	
-		if os.is("Linux") then 
+		if os.istarget("Linux") then 
 			files {
 	                "../MultiThreading/b3PosixThreadSupport.cpp",  
 	                "../MultiThreading/b3PosixThreadSupport.h"    
@@ -459,7 +459,7 @@ end
 			links {"pthread"}
 		end
 	
-		if os.is("MacOSX") then
+		if os.istarget("MacOSX") then
 			files {
 	                "../MultiThreading/b3PosixThreadSupport.cpp",
 	                "../MultiThreading/b3PosixThreadSupport.h"    

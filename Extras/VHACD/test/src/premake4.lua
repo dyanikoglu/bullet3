@@ -20,6 +20,6 @@ files {
 }
 
 
-if os.is("Linux") then 
+if os.istarget("Linux") then 
 		links {"pthread"}
 end

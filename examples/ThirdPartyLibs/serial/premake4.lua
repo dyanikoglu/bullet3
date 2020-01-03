@@ -4,24 +4,24 @@
 	
 	includedirs {"include"}
 	
-    if os.is("Linux") then
+    if os.istarget("Linux") then
         buildoptions{"-fPIC"}
     end
-	if os.is("Windows") then 
+	if os.istarget("Windows") then 
 		files{
 			 "src/impl/win.cc",
 			 "src/impl/list_ports/list_ports_win.cc"
 		 }
 	end
 
-	if os.is("Linux") then
+	if os.istarget("Linux") then
 	files{
 			 "src/impl/unix.cc",
 			 "src/impl/list_ports/list_ports_linux.cc"
 		 }
 	end
 
-	if os.is("MacOSX") then
+	if os.istarget("MacOSX") then
 		files{
 				 "src/impl/unix.cc",
 				 "src/impl/list_ports/list_ports_osx.cc"

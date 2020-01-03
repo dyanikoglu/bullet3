@@ -47,11 +47,11 @@ project ("Test_PhysicsClientUDP")
                         "Bullet3Common",
                         "LinearMath"
                 }
-		if os.is("Windows") then
+		if os.istarget("Windows") then
                 	defines { "WIN32" }
         	        links {"Ws2_32","Winmm"}
 	        end
-		if os.is("Linux") then
+		if os.istarget("Linux") then
 			links {"pthread"}
 		end
 
@@ -102,18 +102,18 @@ project ("Test_PhysicsClientTCP")
                         "Bullet3Common",
                         "LinearMath"
                 }
-		if os.is("Windows") then
+		if os.istarget("Windows") then
                 	defines { "WIN32" }
         	        links {"Ws2_32","Winmm"}
 	        end
 
-		if os.is("Windows") then
+		if os.istarget("Windows") then
                 	defines { "WIN32","_WINSOCK_DEPRECATED_NO_WARNINGS" }
                 	end
-                if os.is("Linux") then
+                if os.istarget("Linux") then
                  defines {"_LINUX"}
                 end
-                if os.is("MacOSX") then
+                if os.istarget("MacOSX") then
                  defines {"_DARWIN"}
                 end
 
@@ -164,7 +164,7 @@ project ("Test_PhysicsServerLoopBack")
 			"BussIK",
 			"LinearMath"
 		}
-        if os.is("Linux") then
+        if os.istarget("Linux") then
             links{"dl"}
         end
 			
@@ -257,7 +257,7 @@ end
 			"BussIK",
 			"LinearMath"
 		}
-        if os.is("Linux") then
+        if os.istarget("Linux") then
             links{"dl"}
         end
 			
@@ -356,7 +356,7 @@ project ("Test_PhysicsServerInProcessExampleBrowser")
                 }
 
 
-	if os.is("MacOSX") then
+	if os.istarget("MacOSX") then
 		links{"Cocoa.framework"}
 	end
 
@@ -437,7 +437,7 @@ if (_OPTIONS["enable_static_vr_plugin"]) then
 		files {"../../examples/SharedMemory/plugins/vrSyncPlugin/vrSyncPlugin.cpp"}
 end
 
-	if os.is("Linux") then
+	if os.istarget("Linux") then
        		initX11()
 	end
 
