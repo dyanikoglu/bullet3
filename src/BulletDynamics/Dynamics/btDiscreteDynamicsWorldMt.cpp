@@ -253,7 +253,6 @@ void btDiscreteDynamicsWorldMt::integrateTransforms(btScalar timeStep)
 
 int btDiscreteDynamicsWorldMt::stepSimulation(btScalar timeStep, int maxSubSteps, btScalar fixedTimeStep, int fixedSubSteps)
 {
-	// TODO: is fixedSubSteps handled correctly?
 	int numSubSteps = btDiscreteDynamicsWorld::stepSimulation(timeStep, maxSubSteps, fixedTimeStep, fixedSubSteps);
 	if (btITaskScheduler* scheduler = btGetTaskScheduler())
 	{
