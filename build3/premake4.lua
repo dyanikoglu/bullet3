@@ -354,6 +354,17 @@ end
 		trigger = "enable_multithreading",
 		description = "enable CPU multithreading for bullet2 libs"
 	}
+
+	newoption
+	{
+		trigger = "openmp_support",
+		description = "enable OpenMP support for multithreading"
+	}
+
+	if _OPTIONS["openmp_support"] then
+		defines {"BT_USE_OPENMP=1"}
+		buildoptions {"/openmp"}
+	end
 	if _OPTIONS["enable_multithreading"] then
 		defines {"BT_THREADSAFE=1"}
 	end
