@@ -40,6 +40,14 @@ public:
 
 	virtual ~btConstraintSolverPoolMt();
 
+	virtual void setSolveCallback(btSolveCallback *callback)
+	{
+		for(int i =0; i< m_solvers.size();i++)
+		{
+			m_solvers[i].solver->setSolveCallback(callback);
+		}
+	};
+	
 	///solve a group of constraints
 	virtual btScalar solveGroup(btCollisionObject** bodies,
 								int numBodies,
