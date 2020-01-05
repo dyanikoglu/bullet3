@@ -604,7 +604,7 @@ void btRaycastVehicle::updateFriction(btScalar timeStep)
 				static const btScalar defaultRollingFrictionImpulse = 0.f;
 				btScalar maxImpulse = wheelInfo.m_brake ? wheelInfo.m_brake : defaultRollingFrictionImpulse;
 				btWheelContactPoint contactPt(m_chassisBody, groundObject, wheelInfo.m_raycastInfo.m_contactPointWS, m_forwardWS[wheel], maxImpulse);
-				btAssert(numWheelsOnGround > 0);
+				// btAssert(numWheelsOnGround > 0);
 				m_forwardImpulse[wheel] = calcRollingFriction(contactPt, getNumWheels()) / btScalar(getNumWheels());
 			}
 
