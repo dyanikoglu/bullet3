@@ -13,6 +13,8 @@ subject to the following restrictions:
 3. This notice may not be removed or altered from any source distribution.
 */
 
+#define BT_USE_SSE_IN_API
+
 #include "btConvexTriangleMeshShape.h"
 #include "BulletCollision/CollisionShapes/btCollisionMargin.h"
 
