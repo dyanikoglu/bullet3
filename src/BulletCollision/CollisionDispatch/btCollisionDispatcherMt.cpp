@@ -73,7 +73,7 @@ void btCollisionDispatcherMt::releaseManifold(btPersistentManifold* manifold)
 {
 	clearManifold(manifold);
 	//btAssert( !btThreadsAreRunning() );
-	if (!m_batchUpdating)
+	if (!m_batchUpdating && m_manifoldsPtr.size() > 0)
 	{
 		// batch updater will update manifold pointers array after finishing, so
 		// only need to update array when not batch-updating
