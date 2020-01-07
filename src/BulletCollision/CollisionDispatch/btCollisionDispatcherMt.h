@@ -30,7 +30,7 @@ public:
 	virtual void dispatchAllCollisionPairs(btOverlappingPairCache* pairCache, const btDispatcherInfo& info, btDispatcher* dispatcher) BT_OVERRIDE;
 
 protected:
-	bool m_batchUpdating;
+	btSpinMutex m_manifoldMutex;
 	int m_grainSize;
 };
 
