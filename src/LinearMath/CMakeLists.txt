@@ -7,6 +7,7 @@ SET(LinearMath_SRCS
 	btAlignedAllocator.cpp
 	btConvexHull.cpp
 	btConvexHullComputer.cpp
+	btDebug.cpp
 	btGeometryUtil.cpp
 	btPolarDecomposition.cpp
 	btQuickprof.cpp
@@ -25,7 +26,9 @@ SET(LinearMath_HDRS
 	btAlignedObjectArray.h
 	btConvexHull.h
 	btConvexHullComputer.h
+	btDebug.h
 	btDefaultMotionState.h
+	btDefines.h
 	btGeometryUtil.h
 	btGrahamScan2dConvexHull.h
 	btHashMap.h

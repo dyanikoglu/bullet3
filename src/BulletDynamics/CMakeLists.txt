@@ -30,6 +30,7 @@ SET(BulletDynamics_SRCS
 #	Dynamics/Bullet-C-API.cpp
 	Vehicle/btRaycastVehicle.cpp
 	Vehicle/btWheelInfo.cpp
+	Vehicle/btWheeledVehicle.cpp
 	Featherstone/btMultiBody.cpp
 	Featherstone/btMultiBodyConstraint.cpp
 	Featherstone/btMultiBodyConstraintSolver.cpp
@@ -88,6 +89,7 @@ SET(Vehicle_HDRS
 	Vehicle/btRaycastVehicle.h
 	Vehicle/btVehicleRaycaster.h
 	Vehicle/btWheelInfo.h
+	Vehicle/btWheeledVehicle.h
 )
 
 SET(Featherstone_HDRS
