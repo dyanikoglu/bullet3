@@ -1,6 +1,6 @@
 # Custom Bullet Physics SDK for Source SDK 2013
 
-This is the official C++ source code repository of the Bullet Physics SDK: real-time collision detection and multi-physics simulation for VR, games, visual effects, robotics, machine learning etc.
+This is custom version of Bullet Physics SDK, customized to work as Source SDK's physics engine as replacement to ipion physics (vphysics)
 
 ## Requirements
 
