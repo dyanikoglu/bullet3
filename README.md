@@ -14,7 +14,7 @@ https://docs.google.com/document/d/1u9vyzPtrVoVhYqQOGNWUgjRbfwfCdIts_NzmvgiJ144/
 
 ## License
 
-All source code files are licensed under the permissive zlib license (http://opensource.org/licenses/Zlib) coming from original repository (https://github.com/bulletphysics/bullet3) unless marked differently in a particular folder/file.
+License file is provided within this repository.
 
 ## Build instructions
 
