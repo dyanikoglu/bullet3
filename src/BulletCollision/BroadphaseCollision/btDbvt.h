@@ -537,12 +537,20 @@ DBVT_INLINE void btDbvtAabbMm::SignedExpand(const btVector3& e)
 //
 DBVT_INLINE bool btDbvtAabbMm::Contain(const btDbvtAabbMm& a) const
 {
+#if	DBVT_INT0_IMPL == DBVT_IMPL_SSE
+	const __m128 r = _mm_and_ps(_mm_cmple_ps(mi.mVec128, a.mi.mVec128),
+	_mm_cmpge_ps(mx.mVec128, a.mx.mVec128));
+
+	const int mask = _mm_movemask_ps(r);
+	return  (mask & 7) == 7; // Check if 3 lowest bits all set
+#else
 	return ((mi.x() <= a.mi.x()) &&
 			(mi.y() <= a.mi.y()) &&
 			(mi.z() <= a.mi.z()) &&
 			(mx.x() >= a.mx.x()) &&
 			(mx.y() >= a.mx.y()) &&
 			(mx.z() >= a.mx.z()));
+#endif
 }
 
 //
@@ -622,14 +630,12 @@ DBVT_INLINE bool Intersect(const btDbvtAabbMm& a,
 						   const btDbvtAabbMm& b)
 {
 #if DBVT_INT0_IMPL == DBVT_IMPL_SSE
-	const __m128 rt(_mm_or_ps(_mm_cmplt_ps(_mm_load_ps(b.mx), _mm_load_ps(a.mi)),
-							  _mm_cmplt_ps(_mm_load_ps(a.mx), _mm_load_ps(b.mi))));
-#if defined(_WIN32)
-	const __int32* pu((const __int32*)&rt);
-#else
-	const int* pu((const int*)&rt);
-#endif
-	return ((pu[0] | pu[1] | pu[2]) == 0);
+	const __m128 rt(_mm_or_ps(_mm_cmplt_ps(b.mx.mVec128, a.mi.mVec128),
+		_mm_cmplt_ps(a.mx.mVec128, b.mi.mVec128)));
+
+	const int mask = _mm_movemask_ps(rt);
+	return (mask & 7) == 0; // check if first 3 slots are all 0
+	
 #else
 	return ((a.mi.x() <= b.mx.x()) &&
 			(a.mx.x() >= b.mi.x()) &&
@@ -684,26 +690,19 @@ DBVT_INLINE int Select(const btDbvtAabbMm& o,
 		int ints[4];
 	};
 
-	__m128 omi(_mm_load_ps(o.mi));
-	omi = _mm_add_ps(omi, _mm_load_ps(o.mx));
-	__m128 ami(_mm_load_ps(a.mi));
-	ami = _mm_add_ps(ami, _mm_load_ps(a.mx));
+	const __m128 mmask = _mm_castsi128_ps(_mm_set1_epi32(0x7FFFFFFF));
+	__m128 omi = _mm_add_ps(o.mi.mVec128, o.mx.mVec128);
+	__m128 ami = _mm_add_ps(a.mi.mVec128, a.mx.mVec128);
 	ami = _mm_sub_ps(ami, omi);
-	ami = _mm_and_ps(ami, _mm_load_ps((const float*)mask));
-	__m128 bmi(_mm_load_ps(b.mi));
-	bmi = _mm_add_ps(bmi, _mm_load_ps(b.mx));
+	ami = _mm_and_ps(ami, mmask);
+	__m128	bmi = _mm_add_ps(b.mi.mVec128, b.mx.mVec128);
 	bmi = _mm_sub_ps(bmi, omi);
-	bmi = _mm_and_ps(bmi, _mm_load_ps((const float*)mask));
-	__m128 t0(_mm_movehl_ps(ami, ami));
-	ami = _mm_add_ps(ami, t0);
-	ami = _mm_add_ss(ami, _mm_shuffle_ps(ami, ami, 1));
-	__m128 t1(_mm_movehl_ps(bmi, bmi));
-	bmi = _mm_add_ps(bmi, t1);
-	bmi = _mm_add_ss(bmi, _mm_shuffle_ps(bmi, bmi, 1));
-
-	btSSEUnion tmp;
-	tmp.ssereg = _mm_cmple_ss(bmi, ami);
-	return tmp.ints[0] & 1;
+	bmi = _mm_and_ps(bmi, mmask);
+	bmi = _mm_sub_ps(bmi, ami);
+	__m128 z = _mm_movehl_ps(bmi, bmi);
+	__m128 y = _mm_shuffle_ps(bmi, bmi, 1);
+	bmi = _mm_add_ss(y, _mm_add_ss(bmi, z));
+	return _mm_cvtss_f32(bmi) <= 0.f;
 
 #else
 	ATTRIBUTE_ALIGNED16(__int32 r[1]);
@@ -774,12 +773,22 @@ DBVT_INLINE void Merge(const btDbvtAabbMm& a,
 DBVT_INLINE bool NotEqual(const btDbvtAabbMm& a,
 						  const btDbvtAabbMm& b)
 {
+#if DBVT_MERGE_IMPL==DBVT_IMPL_SSE
+
+	const __m128 r = _mm_or_ps(_mm_cmpneq_ps(b.mi.mVec128, a.mi.mVec128),
+		_mm_cmpneq_ps(b.mx.mVec128, a.mx.mVec128));
+
+	const int mask = _mm_movemask_ps(r);
+	return (mask & 7) != 0;
+
+#else
 	return ((a.mi.x() != b.mi.x()) ||
 			(a.mi.y() != b.mi.y()) ||
 			(a.mi.z() != b.mi.z()) ||
 			(a.mx.x() != b.mx.x()) ||
 			(a.mx.y() != b.mx.y()) ||
 			(a.mx.z() != b.mx.z()));
+#endif
 }
 
 //
