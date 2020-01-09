@@ -60,11 +60,11 @@ public:
 			void* mem = ci.m_dispatcher1->allocateCollisionAlgorithm(sizeof(btSphereBoxCollisionAlgorithm));
 			if (!m_swapped)
 			{
-				return new (mem) btSphereBoxCollisionAlgorithm(0, ci, body0Wrap, body1Wrap, false);
+				return new (mem) btSphereBoxCollisionAlgorithm(ci.m_manifold, ci, body0Wrap, body1Wrap, false);
 			}
 			else
 			{
-				return new (mem) btSphereBoxCollisionAlgorithm(0, ci, body0Wrap, body1Wrap, true);
+				return new (mem) btSphereBoxCollisionAlgorithm(ci.m_manifold, ci, body0Wrap, body1Wrap, true);
 			}
 		}
 	};

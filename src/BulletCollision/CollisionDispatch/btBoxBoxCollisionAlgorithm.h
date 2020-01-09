@@ -55,7 +55,7 @@ public:
 		{
 			int bbsize = sizeof(btBoxBoxCollisionAlgorithm);
 			void* ptr = ci.m_dispatcher1->allocateCollisionAlgorithm(bbsize);
-			return new (ptr) btBoxBoxCollisionAlgorithm(0, ci, body0Wrap, body1Wrap);
+			return new (ptr) btBoxBoxCollisionAlgorithm(ci.m_manifold, ci, body0Wrap, body1Wrap);
 		}
 	};
 };
