@@ -73,7 +73,6 @@ unsigned int btQuickprofGetCurrentThreadIndex2();
 
 #ifndef BT_NO_PROFILE
 
-
 #include <stdio.h>  //@todo remove this, backwards compatibility
 
 #include "btAlignedAllocator.h"

@@ -56,8 +56,8 @@ protected:
 																		 btCollisionObject* colObj0, btCollisionObject* colObj1, btScalar relaxation, const btContactSolverInfo& infoGlobal, btScalar desiredVelocity = 0, btScalar cfmSlip = 0);
 
 	btMultiBodySolverConstraint& addMultiBodySpinningFrictionConstraint(const btVector3& normalAxis, btPersistentManifold* manifold, int frictionIndex, btManifoldPoint& cp,
-		btScalar combinedTorsionalFriction,
-		btCollisionObject* colObj0, btCollisionObject* colObj1, btScalar relaxation, const btContactSolverInfo& infoGlobal, btScalar desiredVelocity = 0, btScalar cfmSlip = 0);
+																		btScalar combinedTorsionalFriction,
+																		btCollisionObject* colObj0, btCollisionObject* colObj1, btScalar relaxation, const btContactSolverInfo& infoGlobal, btScalar desiredVelocity = 0, btScalar cfmSlip = 0);
 
 	void setupMultiBodyJointLimitConstraint(btMultiBodySolverConstraint & constraintRow,
 											btScalar * jacA, btScalar * jacB,
@@ -66,9 +66,9 @@ protected:
 
 	void setupMultiBodyContactConstraint(btMultiBodySolverConstraint & solverConstraint,
 										 const btVector3& contactNormal,
-                     const btScalar& appliedImpulse,
+										 const btScalar& appliedImpulse,
 										 btManifoldPoint& cp,
-                     const btContactSolverInfo& infoGlobal,
+										 const btContactSolverInfo& infoGlobal,
 										 btScalar& relaxation,
 										 bool isFriction, btScalar desiredVelocity = 0, btScalar cfmSlip = 0);
 

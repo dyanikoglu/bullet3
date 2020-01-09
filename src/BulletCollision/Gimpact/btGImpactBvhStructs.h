@@ -28,7 +28,7 @@ subject to the following restrictions:
 
 #include "btBoxCollision.h"
 #include "btTriangleShapeEx.h"
-#include "gim_pair.h" //for GIM_PAIR
+#include "gim_pair.h"  //for GIM_PAIR
 
 ///GIM_BVH_DATA is an internal GIMPACT collision structure to contain axis aligned bounding box
 struct GIM_BVH_DATA

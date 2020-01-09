@@ -272,16 +272,14 @@ struct btConnectivityProcessor : public btTriangleCallback
 	}
 };
 
-
-struct b3ProcessAllTrianglesHeightfield: public btTriangleCallback
+struct b3ProcessAllTrianglesHeightfield : public btTriangleCallback
 {
 	btHeightfieldTerrainShape* m_heightfieldShape;
 	btTriangleInfoMap* m_triangleInfoMap;
-	
 
 	b3ProcessAllTrianglesHeightfield(btHeightfieldTerrainShape* heightFieldShape, btTriangleInfoMap* triangleInfoMap)
-		:m_heightfieldShape(heightFieldShape),
-		m_triangleInfoMap(triangleInfoMap)
+		: m_heightfieldShape(heightFieldShape),
+		  m_triangleInfoMap(triangleInfoMap)
 	{
 	}
 	virtual void processTriangle(btVector3* triangle, int partId, int triangleIndex)
@@ -376,10 +374,8 @@ void btGenerateInternalEdgeInfo(btBvhTriangleMeshShape* trimeshShape, btTriangle
 	}
 }
 
-
 void btGenerateInternalEdgeInfo(btHeightfieldTerrainShape* heightfieldShape, btTriangleInfoMap* triangleInfoMap)
 {
-
 	//the user pointer shouldn't already be used for other purposes, we intend to store connectivity info there!
 	if (heightfieldShape->getTriangleInfoMap())
 		return;
@@ -395,7 +391,6 @@ void btGenerateInternalEdgeInfo(btHeightfieldTerrainShape* heightfieldShape, btT
 
 	b3ProcessAllTrianglesHeightfield processHeightfield(heightfieldShape, triangleInfoMap);
 	heightfieldShape->processAllTriangles(&processHeightfield, aabbMin, aabbMax);
-
 }
 
 // Given a point and a line segment (defined by two points), compute the closest point
@@ -476,7 +471,6 @@ void btAdjustInternalEdgeContacts(btManifoldPoint& cp, const btCollisionObjectWr
 	if (colObj0Wrap->getCollisionShape()->getShapeType() != TRIANGLE_SHAPE_PROXYTYPE)
 		return;
 
-	
 	btTriangleInfoMap* triangleInfoMapPtr = 0;
 
 	if (colObj0Wrap->getCollisionObject()->getCollisionShape()->getShapeType() == TERRAIN_SHAPE_PROXYTYPE)
@@ -501,7 +495,6 @@ void btAdjustInternalEdgeContacts(btManifoldPoint& cp, const btCollisionObjectWr
 #endif
 	}
 
-
 	btBvhTriangleMeshShape* trimesh = 0;
 
 	if (colObj0Wrap->getCollisionObject()->getCollisionShape()->getShapeType() == SCALED_TRIANGLE_MESH_SHAPE_PROXYTYPE)
@@ -519,8 +512,7 @@ void btAdjustInternalEdgeContacts(btManifoldPoint& cp, const btCollisionObjectWr
 	{
 		triangleInfoMapPtr = (btTriangleInfoMap*)trimesh->getTriangleInfoMap();
 	}
-	
-	
+
 	if (!triangleInfoMapPtr)
 		return;
 

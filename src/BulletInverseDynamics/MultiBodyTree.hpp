@@ -51,7 +51,7 @@ enum JointType
 ///	 - PRISMATIC: force  [N], along joint axis
 ///	 - FLOATING:  moment vector [Nm] and force vector [N], both in body-fixed frame
 ///				  (in that order)
-///  - SPHERICAL: moment vector [Nm] 
+///  - SPHERICAL: moment vector [Nm]
 /// TODO - force element interface (friction, springs, dampers, etc)
 ///	  - gears and motor inertia
 class MultiBodyTree

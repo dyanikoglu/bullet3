@@ -92,6 +92,7 @@ private:
 	void stopThreads();
 	int waitForResponse();
 	btCriticalSection* m_cs;
+
 public:
 	btThreadSupportPosix(const ConstructionInfo& threadConstructionInfo);
 	virtual ~btThreadSupportPosix();
@@ -129,7 +130,7 @@ btThreadSupportPosix::~btThreadSupportPosix()
 {
 	stopThreads();
 	deleteCriticalSection(m_cs);
-	m_cs=0;
+	m_cs = 0;
 }
 
 #if (defined(__APPLE__))
@@ -239,7 +240,7 @@ int btThreadSupportPosix::waitForResponse()
 	{
 		m_cs->lock();
 		bool hasFinished = (2 == m_activeThreadStatus[t].m_status);
-		m_cs->unlock(); 
+		m_cs->unlock();
 		if (hasFinished)
 		{
 			last = t;
@@ -289,7 +290,6 @@ void btThreadSupportPosix::startThreads(const ConstructionInfo& threadConstructi
 		threadStatus.m_userThreadFunc = threadConstructionInfo.m_userThreadFunc;
 		threadStatus.threadUsed = 0;
 		checkPThreadFunction(pthread_create(&threadStatus.thread, NULL, &threadFunction, (void*)&threadStatus));
-
 	}
 }
 

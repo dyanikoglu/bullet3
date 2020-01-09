@@ -694,7 +694,6 @@ void CProfileManager::dumpAll()
 	CProfileManager::Release_Iterator(profileIterator);
 }
 
-
 void btEnterProfileZoneDefault(const char* name)
 {
 }
@@ -710,7 +709,6 @@ void btLeaveProfileZoneDefault()
 {
 }
 #endif  //BT_NO_PROFILE
-
 
 // clang-format off
 #if defined(_WIN32) && (defined(__MINGW32__) || defined(__MINGW64__))

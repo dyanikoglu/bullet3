@@ -191,7 +191,6 @@ public:
 	//debugging
 	virtual const char* getName() const { return "HEIGHTFIELD"; }
 
-	
 	void setUserIndex2(int index)
 	{
 		m_userIndex2 = index;
@@ -216,7 +215,7 @@ public:
 	{
 		return m_triangleInfoMap;
 	}
-	void setTriangleInfoMap(btTriangleInfoMap* map)
+	void setTriangleInfoMap(btTriangleInfoMap * map)
 	{
 		m_triangleInfoMap = map;
 	}

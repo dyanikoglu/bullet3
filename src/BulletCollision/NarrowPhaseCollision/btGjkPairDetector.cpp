@@ -674,7 +674,7 @@ static int btDoSimplex(btSimplex *simplex, btVector3 *dir)
 		return btDoSimplex3(simplex, dir);
 	}
 	else
-	{   // btSimplexSize(simplex) == 4
+	{  // btSimplexSize(simplex) == 4
 		// tetrahedron - this is the only shape which can encapsule origin
 		// so btDoSimplex4() also contains test on it
 		return btDoSimplex4(simplex, dir);

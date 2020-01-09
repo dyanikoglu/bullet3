@@ -30,7 +30,6 @@
 //#include "Bullet3Common/b3Logging.h"
 // #define INCLUDE_GYRO_TERM
 
-
 namespace
 {
 const btScalar SLEEP_EPSILON = btScalar(0.05);  // this is a squared velocity (m^2 s^-2)
@@ -38,11 +37,11 @@ const btScalar SLEEP_TIMEOUT = btScalar(2);     // in seconds
 }  // namespace
 
 void btMultiBody::spatialTransform(const btMatrix3x3 &rotation_matrix,  // rotates vectors in 'from' frame to vectors in 'to' frame
-	const btVector3 &displacement,       // vector from origin of 'from' frame to origin of 'to' frame, in 'to' coordinates
-	const btVector3 &top_in,             // top part of input vector
-	const btVector3 &bottom_in,          // bottom part of input vector
-	btVector3 &top_out,                  // top part of output vector
-	btVector3 &bottom_out)               // bottom part of output vector
+								   const btVector3 &displacement,       // vector from origin of 'from' frame to origin of 'to' frame, in 'to' coordinates
+								   const btVector3 &top_in,             // top part of input vector
+								   const btVector3 &bottom_in,          // bottom part of input vector
+								   btVector3 &top_out,                  // top part of output vector
+								   btVector3 &bottom_out)               // bottom part of output vector
 {
 	top_out = rotation_matrix * top_in;
 	bottom_out = -displacement.cross(top_out) + rotation_matrix * bottom_in;
@@ -50,8 +49,6 @@ void btMultiBody::spatialTransform(const btMatrix3x3 &rotation_matrix,  // rotat
 
 namespace
 {
-
-
 #if 0
     void InverseSpatialTransform(const btMatrix3x3 &rotation_matrix,
                                  const btVector3 &displacement,
@@ -100,8 +97,8 @@ btMultiBody::btMultiBody(int n_links,
 	  m_baseName(0),
 	  m_basePos(0, 0, 0),
 	  m_baseQuat(0, 0, 0, 1),
-      m_basePos_interpolate(0, 0, 0),
-      m_baseQuat_interpolate(0, 0, 0, 1),
+	  m_basePos_interpolate(0, 0, 0),
+	  m_baseQuat_interpolate(0, 0, 0, 1),
 	  m_baseMass(mass),
 	  m_baseInertia(inertia),
 
@@ -405,7 +402,6 @@ void btMultiBody::setJointPos(int i, btScalar q)
 	m_links[i].updateCacheMultiDof();
 }
 
-
 void btMultiBody::setJointPosMultiDof(int i, const double *q)
 {
 	for (int pos = 0; pos < m_links[i].m_posVarCount; ++pos)
@@ -422,8 +418,6 @@ void btMultiBody::setJointPosMultiDof(int i, const float *q)
 	m_links[i].updateCacheMultiDof();
 }
 
-
-
 void btMultiBody::setJointVel(int i, btScalar qdot)
 {
 	m_realBuf[6 + m_links[i].m_dofOffset] = qdot;
@@ -435,7 +429,7 @@ void btMultiBody::setJointVelMultiDof(int i, const double *qdot)
 		m_realBuf[6 + m_links[i].m_dofOffset + dof] = (btScalar)qdot[dof];
 }
 
-void btMultiBody::setJointVelMultiDof(int i, const float* qdot)
+void btMultiBody::setJointVelMultiDof(int i, const float *qdot)
 {
 	for (int dof = 0; dof < m_links[i].m_dofCount; ++dof)
 		m_realBuf[6 + m_links[i].m_dofOffset + dof] = (btScalar)qdot[dof];
@@ -453,12 +447,12 @@ const btQuaternion &btMultiBody::getParentToLocalRot(int i) const
 
 const btVector3 &btMultiBody::getInterpolateRVector(int i) const
 {
-    return m_links[i].m_cachedRVector_interpolate;
+	return m_links[i].m_cachedRVector_interpolate;
 }
 
 const btQuaternion &btMultiBody::getInterpolateParentToLocalRot(int i) const
 {
-    return m_links[i].m_cachedRotParentToThis_interpolate;
+	return m_links[i].m_cachedRotParentToThis_interpolate;
 }
 
 btVector3 btMultiBody::localPosToWorld(int i, const btVector3 &local_pos) const
@@ -559,22 +553,22 @@ void btMultiBody::compTreeLinkVelocities(btVector3 *omega, btVector3 *vel) const
 {
 	int num_links = getNumLinks();
 	// Calculates the velocities of each link (and the base) in its local frame
-	const btQuaternion& base_rot = getWorldToBaseRot();
+	const btQuaternion &base_rot = getWorldToBaseRot();
 	omega[0] = quatRotate(base_rot, getBaseOmega());
 	vel[0] = quatRotate(base_rot, getBaseVel());
 
 	for (int i = 0; i < num_links; ++i)
 	{
-		const btMultibodyLink& link = getLink(i);
+		const btMultibodyLink &link = getLink(i);
 		const int parent = link.m_parent;
 
 		// transform parent vel into this frame, store in omega[i+1], vel[i+1]
 		spatialTransform(btMatrix3x3(link.m_cachedRotParentToThis), link.m_cachedRVector,
-			omega[parent + 1], vel[parent + 1],
-			omega[i + 1], vel[i + 1]);
+						 omega[parent + 1], vel[parent + 1],
+						 omega[i + 1], vel[i + 1]);
 
 		// now add qidot * shat_i
-		const btScalar* jointVel = getJointVelMultiDof(i);
+		const btScalar *jointVel = getJointVelMultiDof(i);
 		for (int dof = 0; dof < link.m_dofCount; ++dof)
 		{
 			omega[i + 1] += jointVel[dof] * link.getAxisTop(dof);
@@ -742,12 +736,12 @@ inline btMatrix3x3 outerProduct(const btVector3 &v0, const btVector3 &v1)  //ren
 //
 
 void btMultiBody::computeAccelerationsArticulatedBodyAlgorithmMultiDof(btScalar dt,
-    btAlignedObjectArray<btScalar> &scratch_r,
-    btAlignedObjectArray<btVector3> &scratch_v,
-    btAlignedObjectArray<btMatrix3x3> &scratch_m,
-	bool isConstraintPass,
-	bool jointFeedbackInWorldSpace,
-	bool jointFeedbackInJointFrame)
+																	   btAlignedObjectArray<btScalar> &scratch_r,
+																	   btAlignedObjectArray<btVector3> &scratch_v,
+																	   btAlignedObjectArray<btMatrix3x3> &scratch_m,
+																	   bool isConstraintPass,
+																	   bool jointFeedbackInWorldSpace,
+																	   bool jointFeedbackInJointFrame)
 {
 	// Implement Featherstone's algorithm to calculate joint accelerations (q_double_dot)
 	// and the base linear & angular accelerations.
@@ -1595,155 +1589,155 @@ void btMultiBody::calcAccelerationDeltasMultiDof(const btScalar *force, btScalar
 }
 void btMultiBody::predictPositionsMultiDof(btScalar dt)
 {
-    int num_links = getNumLinks();
-    // step position by adding dt * velocity
-    //btVector3 v = getBaseVel();
-    //m_basePos += dt * v;
-    //
-    btScalar *pBasePos;
-    btScalar *pBaseVel = &m_realBuf[3];  //note: the !pqd case assumes m_realBuf holds with base velocity at 3,4,5 (should be wrapped for safety)
-    
-    // reset to current position
-    for (int i = 0; i < 3; ++i)
-    {
-        m_basePos_interpolate[i] = m_basePos[i];
-    }
-    pBasePos = m_basePos_interpolate;
-    
-    pBasePos[0] += dt * pBaseVel[0];
-    pBasePos[1] += dt * pBaseVel[1];
-    pBasePos[2] += dt * pBaseVel[2];
-    
-    ///////////////////////////////
-    //local functor for quaternion integration (to avoid error prone redundancy)
-    struct
-    {
-        //"exponential map" based on btTransformUtil::integrateTransform(..)
-        void operator()(const btVector3 &omega, btQuaternion &quat, bool baseBody, btScalar dt)
-        {
-            //baseBody    =>    quat is alias and omega is global coor
-            //!baseBody    =>    quat is alibi and omega is local coor
-            
-            btVector3 axis;
-            btVector3 angvel;
-            
-            if (!baseBody)
-                angvel = quatRotate(quat, omega);  //if quat is not m_baseQuat, it is alibi => ok
-            else
-                angvel = omega;
-            
-            btScalar fAngle = angvel.length();
-            //limit the angular motion
-            if (fAngle * dt > ANGULAR_MOTION_THRESHOLD)
-            {
-                fAngle = btScalar(0.5) * SIMD_HALF_PI / dt;
-            }
-            
-            if (fAngle < btScalar(0.001))
-            {
-                // use Taylor's expansions of sync function
-                axis = angvel * (btScalar(0.5) * dt - (dt * dt * dt) * (btScalar(0.020833333333)) * fAngle * fAngle);
-            }
-            else
-            {
-                // sync(fAngle) = sin(c*fAngle)/t
-                axis = angvel * (btSin(btScalar(0.5) * fAngle * dt) / fAngle);
-            }
-            
-            if (!baseBody)
-                quat = btQuaternion(axis.x(), axis.y(), axis.z(), btCos(fAngle * dt * btScalar(0.5))) * quat;
-            else
-                quat = quat * btQuaternion(-axis.x(), -axis.y(), -axis.z(), btCos(fAngle * dt * btScalar(0.5)));
-            //equivalent to: quat = (btQuaternion(axis.x(),axis.y(),axis.z(),btCos( fAngle*dt*btScalar(0.5) )) * quat.inverse()).inverse();
-            
-            quat.normalize();
-        }
-    } pQuatUpdateFun;
-    ///////////////////////////////
-    
-    //pQuatUpdateFun(getBaseOmega(), m_baseQuat, true, dt);
-    //
-    btScalar *pBaseQuat;
+	int num_links = getNumLinks();
+	// step position by adding dt * velocity
+	//btVector3 v = getBaseVel();
+	//m_basePos += dt * v;
+	//
+	btScalar *pBasePos;
+	btScalar *pBaseVel = &m_realBuf[3];  //note: the !pqd case assumes m_realBuf holds with base velocity at 3,4,5 (should be wrapped for safety)
 
-    // reset to current orientation
-    for (int i = 0; i < 4; ++i)
-    {
-        m_baseQuat_interpolate[i] = m_baseQuat[i];
-    }
-    pBaseQuat = m_baseQuat_interpolate;
+	// reset to current position
+	for (int i = 0; i < 3; ++i)
+	{
+		m_basePos_interpolate[i] = m_basePos[i];
+	}
+	pBasePos = m_basePos_interpolate;
 
-    btScalar *pBaseOmega = &m_realBuf[0];  //note: the !pqd case assumes m_realBuf starts with base omega (should be wrapped for safety)
-    //
-    btQuaternion baseQuat;
-    baseQuat.setValue(pBaseQuat[0], pBaseQuat[1], pBaseQuat[2], pBaseQuat[3]);
-    btVector3 baseOmega;
-    baseOmega.setValue(pBaseOmega[0], pBaseOmega[1], pBaseOmega[2]);
-    pQuatUpdateFun(baseOmega, baseQuat, true, dt);
-    pBaseQuat[0] = baseQuat.x();
-    pBaseQuat[1] = baseQuat.y();
-    pBaseQuat[2] = baseQuat.z();
-    pBaseQuat[3] = baseQuat.w();
+	pBasePos[0] += dt * pBaseVel[0];
+	pBasePos[1] += dt * pBaseVel[1];
+	pBasePos[2] += dt * pBaseVel[2];
 
-    // Finally we can update m_jointPos for each of the m_links
-    for (int i = 0; i < num_links; ++i)
-    {
-        btScalar *pJointPos;
-        pJointPos = &m_links[i].m_jointPos_interpolate[0];
-        
-        btScalar *pJointVel = getJointVelMultiDof(i);
-        
-        switch (m_links[i].m_jointType)
-        {
-            case btMultibodyLink::ePrismatic:
-            case btMultibodyLink::eRevolute:
-            {
-                //reset to current pos
-                pJointPos[0] = m_links[i].m_jointPos[0];
-                btScalar jointVel = pJointVel[0];
-                pJointPos[0] += dt * jointVel;
-                break;
-            }
-            case btMultibodyLink::eSpherical:
-            {
-                //reset to current pos
+	///////////////////////////////
+	//local functor for quaternion integration (to avoid error prone redundancy)
+	struct
+	{
+		//"exponential map" based on btTransformUtil::integrateTransform(..)
+		void operator()(const btVector3 &omega, btQuaternion &quat, bool baseBody, btScalar dt)
+		{
+			//baseBody    =>    quat is alias and omega is global coor
+			//!baseBody    =>    quat is alibi and omega is local coor
 
-                for (int j = 0; j < 4; ++j)
-                {
-                    pJointPos[j] = m_links[i].m_jointPos[j];
-                }
-                
-                btVector3 jointVel;
-                jointVel.setValue(pJointVel[0], pJointVel[1], pJointVel[2]);
-                btQuaternion jointOri;
-                jointOri.setValue(pJointPos[0], pJointPos[1], pJointPos[2], pJointPos[3]);
-                pQuatUpdateFun(jointVel, jointOri, false, dt);
-                pJointPos[0] = jointOri.x();
-                pJointPos[1] = jointOri.y();
-                pJointPos[2] = jointOri.z();
-                pJointPos[3] = jointOri.w();
-                break;
-            }
-            case btMultibodyLink::ePlanar:
-            {
-                for (int j = 0; j < 3; ++j)
-                {
-                    pJointPos[j] = m_links[i].m_jointPos[j];
-                }
-                pJointPos[0] += dt * getJointVelMultiDof(i)[0];
-                
-                btVector3 q0_coors_qd1qd2 = getJointVelMultiDof(i)[1] * m_links[i].getAxisBottom(1) + getJointVelMultiDof(i)[2] * m_links[i].getAxisBottom(2);
-                btVector3 no_q0_coors_qd1qd2 = quatRotate(btQuaternion(m_links[i].getAxisTop(0), pJointPos[0]), q0_coors_qd1qd2);
-                pJointPos[1] += m_links[i].getAxisBottom(1).dot(no_q0_coors_qd1qd2) * dt;
-                pJointPos[2] += m_links[i].getAxisBottom(2).dot(no_q0_coors_qd1qd2) * dt;
-                break;
-            }
-            default:
-            {
-            }
-        }
-        
-        m_links[i].updateInterpolationCacheMultiDof();
-    }
+			btVector3 axis;
+			btVector3 angvel;
+
+			if (!baseBody)
+				angvel = quatRotate(quat, omega);  //if quat is not m_baseQuat, it is alibi => ok
+			else
+				angvel = omega;
+
+			btScalar fAngle = angvel.length();
+			//limit the angular motion
+			if (fAngle * dt > ANGULAR_MOTION_THRESHOLD)
+			{
+				fAngle = btScalar(0.5) * SIMD_HALF_PI / dt;
+			}
+
+			if (fAngle < btScalar(0.001))
+			{
+				// use Taylor's expansions of sync function
+				axis = angvel * (btScalar(0.5) * dt - (dt * dt * dt) * (btScalar(0.020833333333)) * fAngle * fAngle);
+			}
+			else
+			{
+				// sync(fAngle) = sin(c*fAngle)/t
+				axis = angvel * (btSin(btScalar(0.5) * fAngle * dt) / fAngle);
+			}
+
+			if (!baseBody)
+				quat = btQuaternion(axis.x(), axis.y(), axis.z(), btCos(fAngle * dt * btScalar(0.5))) * quat;
+			else
+				quat = quat * btQuaternion(-axis.x(), -axis.y(), -axis.z(), btCos(fAngle * dt * btScalar(0.5)));
+			//equivalent to: quat = (btQuaternion(axis.x(),axis.y(),axis.z(),btCos( fAngle*dt*btScalar(0.5) )) * quat.inverse()).inverse();
+
+			quat.normalize();
+		}
+	} pQuatUpdateFun;
+	///////////////////////////////
+
+	//pQuatUpdateFun(getBaseOmega(), m_baseQuat, true, dt);
+	//
+	btScalar *pBaseQuat;
+
+	// reset to current orientation
+	for (int i = 0; i < 4; ++i)
+	{
+		m_baseQuat_interpolate[i] = m_baseQuat[i];
+	}
+	pBaseQuat = m_baseQuat_interpolate;
+
+	btScalar *pBaseOmega = &m_realBuf[0];  //note: the !pqd case assumes m_realBuf starts with base omega (should be wrapped for safety)
+	//
+	btQuaternion baseQuat;
+	baseQuat.setValue(pBaseQuat[0], pBaseQuat[1], pBaseQuat[2], pBaseQuat[3]);
+	btVector3 baseOmega;
+	baseOmega.setValue(pBaseOmega[0], pBaseOmega[1], pBaseOmega[2]);
+	pQuatUpdateFun(baseOmega, baseQuat, true, dt);
+	pBaseQuat[0] = baseQuat.x();
+	pBaseQuat[1] = baseQuat.y();
+	pBaseQuat[2] = baseQuat.z();
+	pBaseQuat[3] = baseQuat.w();
+
+	// Finally we can update m_jointPos for each of the m_links
+	for (int i = 0; i < num_links; ++i)
+	{
+		btScalar *pJointPos;
+		pJointPos = &m_links[i].m_jointPos_interpolate[0];
+
+		btScalar *pJointVel = getJointVelMultiDof(i);
+
+		switch (m_links[i].m_jointType)
+		{
+			case btMultibodyLink::ePrismatic:
+			case btMultibodyLink::eRevolute:
+			{
+				//reset to current pos
+				pJointPos[0] = m_links[i].m_jointPos[0];
+				btScalar jointVel = pJointVel[0];
+				pJointPos[0] += dt * jointVel;
+				break;
+			}
+			case btMultibodyLink::eSpherical:
+			{
+				//reset to current pos
+
+				for (int j = 0; j < 4; ++j)
+				{
+					pJointPos[j] = m_links[i].m_jointPos[j];
+				}
+
+				btVector3 jointVel;
+				jointVel.setValue(pJointVel[0], pJointVel[1], pJointVel[2]);
+				btQuaternion jointOri;
+				jointOri.setValue(pJointPos[0], pJointPos[1], pJointPos[2], pJointPos[3]);
+				pQuatUpdateFun(jointVel, jointOri, false, dt);
+				pJointPos[0] = jointOri.x();
+				pJointPos[1] = jointOri.y();
+				pJointPos[2] = jointOri.z();
+				pJointPos[3] = jointOri.w();
+				break;
+			}
+			case btMultibodyLink::ePlanar:
+			{
+				for (int j = 0; j < 3; ++j)
+				{
+					pJointPos[j] = m_links[i].m_jointPos[j];
+				}
+				pJointPos[0] += dt * getJointVelMultiDof(i)[0];
+
+				btVector3 q0_coors_qd1qd2 = getJointVelMultiDof(i)[1] * m_links[i].getAxisBottom(1) + getJointVelMultiDof(i)[2] * m_links[i].getAxisBottom(2);
+				btVector3 no_q0_coors_qd1qd2 = quatRotate(btQuaternion(m_links[i].getAxisTop(0), pJointPos[0]), q0_coors_qd1qd2);
+				pJointPos[1] += m_links[i].getAxisBottom(1).dot(no_q0_coors_qd1qd2) * dt;
+				pJointPos[2] += m_links[i].getAxisBottom(2).dot(no_q0_coors_qd1qd2) * dt;
+				break;
+			}
+			default:
+			{
+			}
+		}
+
+		m_links[i].updateInterpolationCacheMultiDof();
+	}
 }
 
 void btMultiBody::stepPositionsMultiDof(btScalar dt, btScalar *pq, btScalar *pqd)
@@ -1753,9 +1747,9 @@ void btMultiBody::stepPositionsMultiDof(btScalar dt, btScalar *pq, btScalar *pqd
 	//btVector3 v = getBaseVel();
 	//m_basePos += dt * v;
 	//
-    btScalar *pBasePos = (pq ? &pq[4] : m_basePos);
-    btScalar *pBaseVel = (pqd ? &pqd[3] : &m_realBuf[3]);  //note: the !pqd case assumes m_realBuf holds with base velocity at 3,4,5 (should be wrapped for safety)
-    
+	btScalar *pBasePos = (pq ? &pq[4] : m_basePos);
+	btScalar *pBaseVel = (pqd ? &pqd[3] : &m_realBuf[3]);  //note: the !pqd case assumes m_realBuf holds with base velocity at 3,4,5 (should be wrapped for safety)
+
 	pBasePos[0] += dt * pBaseVel[0];
 	pBasePos[1] += dt * pBaseVel[1];
 	pBasePos[2] += dt * pBaseVel[2];
@@ -1809,7 +1803,7 @@ void btMultiBody::stepPositionsMultiDof(btScalar dt, btScalar *pq, btScalar *pqd
 
 	//pQuatUpdateFun(getBaseOmega(), m_baseQuat, true, dt);
 	//
-    btScalar *pBaseQuat = pq ? pq : m_baseQuat;
+	btScalar *pBaseQuat = pq ? pq : m_baseQuat;
 	btScalar *pBaseOmega = pqd ? pqd : &m_realBuf[0];  //note: the !pqd case assumes m_realBuf starts with base omega (should be wrapped for safety)
 	//
 	btQuaternion baseQuat;
@@ -1834,9 +1828,9 @@ void btMultiBody::stepPositionsMultiDof(btScalar dt, btScalar *pq, btScalar *pqd
 	// Finally we can update m_jointPos for each of the m_links
 	for (int i = 0; i < num_links; ++i)
 	{
-        btScalar *pJointPos;
-        pJointPos= (pq ? pq : &m_links[i].m_jointPos[0]);
-        
+		btScalar *pJointPos;
+		pJointPos = (pq ? pq : &m_links[i].m_jointPos[0]);
+
 		btScalar *pJointVel = (pqd ? pqd : getJointVelMultiDof(i));
 
 		switch (m_links[i].m_jointType)
@@ -1844,14 +1838,14 @@ void btMultiBody::stepPositionsMultiDof(btScalar dt, btScalar *pq, btScalar *pqd
 			case btMultibodyLink::ePrismatic:
 			case btMultibodyLink::eRevolute:
 			{
-                //reset to current pos
+				//reset to current pos
 				btScalar jointVel = pJointVel[0];
 				pJointPos[0] += dt * jointVel;
 				break;
 			}
 			case btMultibodyLink::eSpherical:
 			{
-                //reset to current pos
+				//reset to current pos
 				btVector3 jointVel;
 				jointVel.setValue(pJointVel[0], pJointVel[1], pJointVel[2]);
 				btQuaternion jointOri;
@@ -1915,17 +1909,17 @@ void btMultiBody::fillConstraintJacobianMultiDof(int link,
 	//scratch_r.resize(m_dofCount);
 	//btScalar *results = m_dofCount > 0 ? &scratch_r[0] : 0;
 
-    scratch_r1.resize(m_dofCount+num_links);
-    btScalar * results = m_dofCount > 0 ? &scratch_r1[0] : 0;
-    btScalar* links = num_links? &scratch_r1[m_dofCount] : 0;
-    int numLinksChildToRoot=0;
-    int l = link;
-    while (l != -1)
-    {
-        links[numLinksChildToRoot++]=l;
-        l = m_links[l].m_parent;
-    }
-    
+	scratch_r1.resize(m_dofCount + num_links);
+	btScalar *results = m_dofCount > 0 ? &scratch_r1[0] : 0;
+	btScalar *links = num_links ? &scratch_r1[m_dofCount] : 0;
+	int numLinksChildToRoot = 0;
+	int l = link;
+	while (l != -1)
+	{
+		links[numLinksChildToRoot++] = l;
+		l = m_links[l].m_parent;
+	}
+
 	btMatrix3x3 *rot_from_world = &scratch_m[0];
 
 	const btVector3 p_minus_com_world = contact_point - m_basePos;
@@ -1959,14 +1953,14 @@ void btMultiBody::fillConstraintJacobianMultiDof(int link,
 	// Qdot coefficients, if necessary.
 	if (num_links > 0 && link > -1)
 	{
-        // TODO: (Also, we are making 3 separate calls to this function, for the normal & the 2 friction directions,
+		// TODO: (Also, we are making 3 separate calls to this function, for the normal & the 2 friction directions,
 		// which is resulting in repeated work being done...)
 
 		// calculate required normals & positions in the local frames.
-        for (int a = 0; a < numLinksChildToRoot; a++)
-        {
-            int i = links[numLinksChildToRoot-1-a];
-        	// transform to local frame
+		for (int a = 0; a < numLinksChildToRoot; a++)
+		{
+			int i = links[numLinksChildToRoot - 1 - a];
+			// transform to local frame
 			const int parent = m_links[i].m_parent;
 			const btMatrix3x3 mtx(m_links[i].m_cachedRotParentToThis);
 			rot_from_world[i + 1] = mtx * rot_from_world[parent + 1];
@@ -2051,8 +2045,6 @@ void btMultiBody::checkMotionAndSleepIfRequired(btScalar timestep)
 		m_sleepTimer = 0;
 		return;
 	}
-
-	
 
 	// motion is computed as omega^2 + v^2 + (sum of squares of joint velocities)
 	btScalar motion = 0;
@@ -2142,7 +2134,7 @@ void btMultiBody::updateCollisionObjectWorldTransforms(btAlignedObjectArray<btQu
 		tr.setRotation(btQuaternion(quat[0], quat[1], quat[2], quat[3]));
 
 		getBaseCollider()->setWorldTransform(tr);
-        getBaseCollider()->setInterpolationWorldTransform(tr);
+		getBaseCollider()->setInterpolationWorldTransform(tr);
 	}
 
 	for (int k = 0; k < getNumLinks(); k++)
@@ -2171,60 +2163,60 @@ void btMultiBody::updateCollisionObjectWorldTransforms(btAlignedObjectArray<btQu
 			tr.setRotation(btQuaternion(quat[0], quat[1], quat[2], quat[3]));
 
 			col->setWorldTransform(tr);
-            col->setInterpolationWorldTransform(tr);
+			col->setInterpolationWorldTransform(tr);
 		}
 	}
 }
 
 void btMultiBody::updateCollisionObjectInterpolationWorldTransforms(btAlignedObjectArray<btQuaternion> &world_to_local, btAlignedObjectArray<btVector3> &local_origin)
 {
-    world_to_local.resize(getNumLinks() + 1);
-    local_origin.resize(getNumLinks() + 1);
-    
-    world_to_local[0] = getInterpolateWorldToBaseRot();
-    local_origin[0] = getInterpolateBasePos();
-    
-    if (getBaseCollider())
-    {
-        btVector3 posr = local_origin[0];
-        //    float pos[4]={posr.x(),posr.y(),posr.z(),1};
-        btScalar quat[4] = {-world_to_local[0].x(), -world_to_local[0].y(), -world_to_local[0].z(), world_to_local[0].w()};
-        btTransform tr;
-        tr.setIdentity();
-        tr.setOrigin(posr);
-        tr.setRotation(btQuaternion(quat[0], quat[1], quat[2], quat[3]));
-        
-        getBaseCollider()->setInterpolationWorldTransform(tr);
-    }
-    
-    for (int k = 0; k < getNumLinks(); k++)
-    {
-        const int parent = getParent(k);
-        world_to_local[k + 1] = getInterpolateParentToLocalRot(k) * world_to_local[parent + 1];
-        local_origin[k + 1] = local_origin[parent + 1] + (quatRotate(world_to_local[k + 1].inverse(), getInterpolateRVector(k)));
-    }
-    
-    for (int m = 0; m < getNumLinks(); m++)
-    {
-        btMultiBodyLinkCollider *col = getLink(m).m_collider;
-        if (col)
-        {
-            int link = col->m_link;
-            btAssert(link == m);
-            
-            int index = link + 1;
-            
-            btVector3 posr = local_origin[index];
-            //            float pos[4]={posr.x(),posr.y(),posr.z(),1};
-            btScalar quat[4] = {-world_to_local[index].x(), -world_to_local[index].y(), -world_to_local[index].z(), world_to_local[index].w()};
-            btTransform tr;
-            tr.setIdentity();
-            tr.setOrigin(posr);
-            tr.setRotation(btQuaternion(quat[0], quat[1], quat[2], quat[3]));
-            
-            col->setInterpolationWorldTransform(tr);
-        }
-    }
+	world_to_local.resize(getNumLinks() + 1);
+	local_origin.resize(getNumLinks() + 1);
+
+	world_to_local[0] = getInterpolateWorldToBaseRot();
+	local_origin[0] = getInterpolateBasePos();
+
+	if (getBaseCollider())
+	{
+		btVector3 posr = local_origin[0];
+		//    float pos[4]={posr.x(),posr.y(),posr.z(),1};
+		btScalar quat[4] = {-world_to_local[0].x(), -world_to_local[0].y(), -world_to_local[0].z(), world_to_local[0].w()};
+		btTransform tr;
+		tr.setIdentity();
+		tr.setOrigin(posr);
+		tr.setRotation(btQuaternion(quat[0], quat[1], quat[2], quat[3]));
+
+		getBaseCollider()->setInterpolationWorldTransform(tr);
+	}
+
+	for (int k = 0; k < getNumLinks(); k++)
+	{
+		const int parent = getParent(k);
+		world_to_local[k + 1] = getInterpolateParentToLocalRot(k) * world_to_local[parent + 1];
+		local_origin[k + 1] = local_origin[parent + 1] + (quatRotate(world_to_local[k + 1].inverse(), getInterpolateRVector(k)));
+	}
+
+	for (int m = 0; m < getNumLinks(); m++)
+	{
+		btMultiBodyLinkCollider *col = getLink(m).m_collider;
+		if (col)
+		{
+			int link = col->m_link;
+			btAssert(link == m);
+
+			int index = link + 1;
+
+			btVector3 posr = local_origin[index];
+			//            float pos[4]={posr.x(),posr.y(),posr.z(),1};
+			btScalar quat[4] = {-world_to_local[index].x(), -world_to_local[index].y(), -world_to_local[index].z(), world_to_local[index].w()};
+			btTransform tr;
+			tr.setIdentity();
+			tr.setOrigin(posr);
+			tr.setRotation(btQuaternion(quat[0], quat[1], quat[2], quat[3]));
+
+			col->setInterpolationWorldTransform(tr);
+		}
+	}
 }
 
 int btMultiBody::calculateSerializeBufferSize() const

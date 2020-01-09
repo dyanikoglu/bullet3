@@ -21,9 +21,9 @@ btHeightfieldTerrainShape::btHeightfieldTerrainShape(
 	int heightStickWidth, int heightStickLength, const void* heightfieldData,
 	btScalar heightScale, btScalar minHeight, btScalar maxHeight, int upAxis,
 	PHY_ScalarType hdt, bool flipQuadEdges)
-	:m_userIndex2(-1),
-	m_userValue3(0),
-	m_triangleInfoMap(0)
+	: m_userIndex2(-1),
+	  m_userValue3(0),
+	  m_triangleInfoMap(0)
 {
 	initialize(heightStickWidth, heightStickLength, heightfieldData,
 			   heightScale, minHeight, maxHeight, upAxis, hdt,
@@ -31,9 +31,9 @@ btHeightfieldTerrainShape::btHeightfieldTerrainShape(
 }
 
 btHeightfieldTerrainShape::btHeightfieldTerrainShape(int heightStickWidth, int heightStickLength, const void* heightfieldData, btScalar maxHeight, int upAxis, bool useFloatData, bool flipQuadEdges)
-	:m_userIndex2(-1),
-	m_userValue3(0),
-	m_triangleInfoMap(0)
+	: m_userIndex2(-1),
+	  m_userValue3(0),
+	  m_triangleInfoMap(0)
 {
 	// legacy constructor: support only float or unsigned char,
 	// 	and min height is zero
@@ -80,7 +80,7 @@ void btHeightfieldTerrainShape::initialize(
 	m_flipTriangleWinding = false;
 	m_upAxis = upAxis;
 	m_localScaling.setValue(btScalar(1.), btScalar(1.), btScalar(1.));
-	
+
 	m_vboundsChunkSize = 0;
 	m_vboundsGridWidth = 0;
 	m_vboundsGridLength = 0;
@@ -342,7 +342,7 @@ void btHeightfieldTerrainShape::processAllTriangles(btTriangleCallback* callback
 		for (int x = startX; x < endX; x++)
 		{
 			btVector3 vertices[3];
-			int indices[3] = { 0, 1, 2 };
+			int indices[3] = {0, 1, 2};
 			if (m_flipTriangleWinding)
 			{
 				indices[0] = 2;
@@ -360,7 +360,7 @@ void btHeightfieldTerrainShape::processAllTriangles(btTriangleCallback* callback
 				//  getVertex(x,j,vertices[0]);//already got this vertex before, thanks to Danny Chapman
 				getVertex(x + 1, j + 1, vertices[indices[1]]);
 				getVertex(x + 1, j, vertices[indices[2]]);
-				callback->processTriangle(vertices, 2 * x+1, j);
+				callback->processTriangle(vertices, 2 * x + 1, j);
 			}
 			else
 			{
@@ -373,7 +373,7 @@ void btHeightfieldTerrainShape::processAllTriangles(btTriangleCallback* callback
 				getVertex(x + 1, j, vertices[indices[0]]);
 				//getVertex(x,j+1,vertices[1]);
 				getVertex(x + 1, j + 1, vertices[indices[2]]);
-				callback->processTriangle(vertices, 2 * x+1, j);
+				callback->processTriangle(vertices, 2 * x + 1, j);
 			}
 		}
 	}
@@ -397,18 +397,18 @@ const btVector3& btHeightfieldTerrainShape::getLocalScaling() const
 
 namespace
 {
-	struct GridRaycastState
-	{
-		int x;  // Next quad coords
-		int z;
-		int prev_x;  // Previous quad coords
-		int prev_z;
-		btScalar param;      // Exit param for previous quad
-		btScalar prevParam;  // Enter param for previous quad
-		btScalar maxDistanceFlat;
-		btScalar maxDistance3d;
-	};
-}
+struct GridRaycastState
+{
+	int x;  // Next quad coords
+	int z;
+	int prev_x;  // Previous quad coords
+	int prev_z;
+	btScalar param;      // Exit param for previous quad
+	btScalar prevParam;  // Enter param for previous quad
+	btScalar maxDistanceFlat;
+	btScalar maxDistance3d;
+};
+}  // namespace
 
 // TODO Does it really need to take 3D vectors?
 /// Iterates through a virtual 2D grid of unit-sized square cells,
@@ -424,7 +424,6 @@ void gridRaycast(Action_T& quadAction, const btVector3& beginPos, const btVector
 		// Consider the ray is too small to hit anything
 		return;
 	}
-	
 
 	btScalar rayDirectionFlatX = endPos[indices[0]] - beginPos[indices[0]];
 	btScalar rayDirectionFlatZ = endPos[indices[2]] - beginPos[indices[2]];
@@ -623,7 +622,7 @@ struct ProcessVBoundsAction
 
 	ProcessVBoundsAction(const btAlignedObjectArray<btHeightfieldTerrainShape::Range>& bnd, int* indices)
 		: vbounds(bnd),
-		m_indices(indices)
+		  m_indices(indices)
 	{
 	}
 	void operator()(const GridRaycastState& rs) const
@@ -694,7 +693,7 @@ void btHeightfieldTerrainShape::performRaycast(btTriangleCallback* callback, con
 	processTriangles.length = m_heightStickLength - 1;
 
 	// TODO Transform vectors to account for m_upAxis
-	int indices[3] = { 0, 1, 2 };
+	int indices[3] = {0, 1, 2};
 	if (m_upAxis == 2)
 	{
 		indices[1] = 2;
@@ -714,9 +713,7 @@ void btHeightfieldTerrainShape::performRaycast(btTriangleCallback* callback, con
 		return;
 	}
 
-	
-
-	if (m_vboundsGrid.size()==0)
+	if (m_vboundsGrid.size() == 0)
 	{
 		// Process all quads intersecting the flat projection of the ray
 		gridRaycast(processTriangles, beginPos, endPos, &indices[0]);
@@ -782,7 +779,7 @@ void btHeightfieldTerrainShape::buildAccelerator(int chunkSize)
 
 	// This data structure is only reallocated if the required size changed
 	m_vboundsGrid.resize(nChunksX * nChunksZ);
-	
+
 	// Compute min and max height for all chunks
 	for (int cz = 0; cz < nChunksZ; ++cz)
 	{

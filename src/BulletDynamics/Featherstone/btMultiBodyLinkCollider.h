@@ -38,7 +38,6 @@ public:
 
 	virtual ~btMultiBodyLinkCollider()
 	{
-
 	}
 	btMultiBodyLinkCollider(btMultiBody* multiBody, int link)
 		: m_multiBody(multiBody),

@@ -37,7 +37,6 @@ btShapeHull::~btShapeHull()
 
 bool btShapeHull::buildHull(btScalar /*margin*/, int highres)
 {
-	
 	int numSampleDirections = highres ? NUM_UNITSPHERE_POINTS_HIGHRES : NUM_UNITSPHERE_POINTS;
 	btVector3 supportPoints[NUM_UNITSPHERE_POINTS_HIGHRES + MAX_PREFERRED_PENETRATION_DIRECTIONS * 2];
 	int i;

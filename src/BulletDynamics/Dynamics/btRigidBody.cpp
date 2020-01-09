@@ -225,10 +225,10 @@ void btRigidBody::applyGravity()
 
 void btRigidBody::clearGravity()
 {
-    if (isStaticOrKinematicObject())
-        return;
-    
-    applyCentralForce(-m_gravity);
+	if (isStaticOrKinematicObject())
+		return;
+
+	applyCentralForce(-m_gravity);
 }
 
 void btRigidBody::proceedToTransform(const btTransform& newTrans)

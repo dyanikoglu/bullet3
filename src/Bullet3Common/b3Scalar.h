@@ -40,12 +40,12 @@ inline int b3GetVersion()
 
 #ifdef _WIN32
 
-#if  defined(__GNUC__)	// it should handle both MINGW and CYGWIN
-#define B3_FORCE_INLINE             __inline__ __attribute__((always_inline))
-#define B3_ATTRIBUTE_ALIGNED16(a)   a __attribute__((aligned(16)))
-#define B3_ATTRIBUTE_ALIGNED64(a)   a __attribute__((aligned(64)))
-#define B3_ATTRIBUTE_ALIGNED128(a)  a __attribute__((aligned(128)))
-#elif ( defined(_MSC_VER) && _MSC_VER < 1300 )
+#if defined(__GNUC__)  // it should handle both MINGW and CYGWIN
+#define B3_FORCE_INLINE __inline__ __attribute__((always_inline))
+#define B3_ATTRIBUTE_ALIGNED16(a) a __attribute__((aligned(16)))
+#define B3_ATTRIBUTE_ALIGNED64(a) a __attribute__((aligned(64)))
+#define B3_ATTRIBUTE_ALIGNED128(a) a __attribute__((aligned(128)))
+#elif (defined(_MSC_VER) && _MSC_VER < 1300)
 #define B3_FORCE_INLINE inline
 #define B3_ATTRIBUTE_ALIGNED16(a) a
 #define B3_ATTRIBUTE_ALIGNED64(a) a
@@ -72,15 +72,14 @@ inline int b3GetVersion()
 #if (defined(_WIN32) && (_MSC_VER) && _MSC_VER >= 1400) && (!defined(B3_USE_DOUBLE_PRECISION))
 #if (defined(_M_IX86) || defined(_M_X64))
 
-
 #ifdef __clang__
 //#define B3_NO_SIMD_OPERATOR_OVERLOADS
 #define B3_DISABLE_SSE
-#endif //__clang__
+#endif  //__clang__
 
 #ifndef B3_DISABLE_SSE
 #define B3_USE_SSE
-#endif //B3_DISABLE_SSE
+#endif  //B3_DISABLE_SSE
 
 #ifdef B3_USE_SSE
 //B3_USE_SSE_IN_API is disabled under Windows by default, because
@@ -102,7 +101,14 @@ inline int b3GetVersion()
 #ifdef B3_DEBUG
 #ifdef _MSC_VER
 #include <stdio.h>
-#define b3Assert(x) { if(!(x)){b3Error("Assert " __FILE__ ":%u (%s)\n", __LINE__, #x);__debugbreak();	}}
+#define b3Assert(x)                                                 \
+	{                                                               \
+		if (!(x))                                                   \
+		{                                                           \
+			b3Error("Assert " __FILE__ ":%u (%s)\n", __LINE__, #x); \
+			__debugbreak();                                         \
+		}                                                           \
+	}
 #else  //_MSC_VER
 #include <assert.h>
 #define b3Assert assert
@@ -312,7 +318,7 @@ inline __m128 operator*(const __m128 A, const __m128 B)
 {
 	return _mm_mul_ps(A, B);
 }
-#endif //B3_NO_SIMD_OPERATOR_OVERLOADS
+#endif  //B3_NO_SIMD_OPERATOR_OVERLOADS
 #define b3CastfTo128i(a) (_mm_castps_si128(a))
 #define b3CastfTo128d(a) (_mm_castps_pd(a))
 #define b3CastiTo128f(a) (_mm_castsi128_ps(a))

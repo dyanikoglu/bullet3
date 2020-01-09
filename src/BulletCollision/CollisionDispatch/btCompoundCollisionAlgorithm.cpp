@@ -137,7 +137,6 @@ public:
 		btVector3 aabbMin1, aabbMax1;
 		m_otherObjWrap->getCollisionShape()->getAabb(m_otherObjWrap->getWorldTransform(), aabbMin1, aabbMax1);
 
-
 		if (TestAabbAgainstAabb2(aabbMin0, aabbMax0, aabbMin1, aabbMax1))
 		{
 			btTransform preTransform = childTrans;

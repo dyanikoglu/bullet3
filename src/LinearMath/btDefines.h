@@ -37,11 +37,11 @@ inline int btGetVersion()
 
 inline int btIsDoublePrecision()
 {
-  #ifdef BT_USE_DOUBLE_PRECISION
-  return true;
-  #else
-  return false;
-  #endif
+#ifdef BT_USE_DOUBLE_PRECISION
+	return true;
+#else
+	return false;
+#endif
 }
 
 // The following macro "BT_NOT_EMPTY_FILE" can be put into a file
@@ -78,12 +78,12 @@ inline int btIsDoublePrecision()
 
 #ifdef _WIN32
 
-#if  defined(__GNUC__)	// it should handle both MINGW and CYGWIN
-        	#define SIMD_FORCE_INLINE        __inline__ __attribute__((always_inline))
-        	#define ATTRIBUTE_ALIGNED16(a)   a __attribute__((aligned(16)))
-        	#define ATTRIBUTE_ALIGNED64(a)   a __attribute__((aligned(64)))
-        	#define ATTRIBUTE_ALIGNED128(a)  a __attribute__((aligned(128)))
-#elif ( defined(_MSC_VER) && _MSC_VER < 1300 )
+#if defined(__GNUC__)  // it should handle both MINGW and CYGWIN
+#define SIMD_FORCE_INLINE __inline__ __attribute__((always_inline))
+#define ATTRIBUTE_ALIGNED16(a) a __attribute__((aligned(16)))
+#define ATTRIBUTE_ALIGNED64(a) a __attribute__((aligned(64)))
+#define ATTRIBUTE_ALIGNED128(a) a __attribute__((aligned(128)))
+#elif (defined(_MSC_VER) && _MSC_VER < 1300)
 #define SIMD_FORCE_INLINE inline
 #define ATTRIBUTE_ALIGNED16(a) a
 #define ATTRIBUTE_ALIGNED64(a) a
@@ -124,7 +124,7 @@ inline int btIsDoublePrecision()
 #endif
 
 #define BT_USE_SSE
-#endif//__BT_DISABLE_SSE__
+#endif  //__BT_DISABLE_SSE__
 #ifdef BT_USE_SSE
 
 #if (_MSC_FULL_VER >= 170050727)  //Visual Studio 2012 can compile SSE4/FMA3 (but SSE4/FMA3 is not enabled by default)

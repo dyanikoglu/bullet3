@@ -96,7 +96,7 @@ public:
 	{
 		b3Vector3 axis = axis1;
 		axis.safeNormalize();
-		
+
 		b3Scalar d = axis.length();
 		b3Assert(d != b3Scalar(0.0));
 		if (d < B3_EPSILON)
@@ -107,7 +107,7 @@ public:
 		{
 			b3Scalar s = b3Sin(_angle * b3Scalar(0.5)) / d;
 			setValue(axis.getX() * s, axis.getY() * s, axis.getZ() * s,
-				b3Cos(_angle * b3Scalar(0.5)));
+					 b3Cos(_angle * b3Scalar(0.5)));
 		}
 	}
 	/**@brief Set the quaternion using Euler angles

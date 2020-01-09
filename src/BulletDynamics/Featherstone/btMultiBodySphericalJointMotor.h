@@ -33,7 +33,7 @@ protected:
 
 public:
 	btMultiBodySphericalJointMotor(btMultiBody* body, int link, btScalar maxMotorImpulse);
-	
+
 	virtual ~btMultiBodySphericalJointMotor();
 	virtual void finalizeMultiDof();
 

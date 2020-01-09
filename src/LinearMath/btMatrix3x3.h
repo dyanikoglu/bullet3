@@ -369,9 +369,9 @@ public:
 		vT = _mm_unpackhi_ps(v0, v1);  //	z0 z1 * *
 		v0 = _mm_unpacklo_ps(v0, v1);  //	x0 x1 y0 y1
 
-		v1 = _mm_shuffle_ps(v0, v2, BT_SHUFFLE(2, 3, 1, 3));                    // y0 y1 y2 0
-		v0 = _mm_shuffle_ps(v0, v2, BT_SHUFFLE(0, 1, 0, 3));                    // x0 x1 x2 0
-		v2 = _mm_shuffle_ps(vT, v2, BT_SHUFFLE(0, 1, 2, 3));	// z0 z1 z2 0
+		v1 = _mm_shuffle_ps(v0, v2, BT_SHUFFLE(2, 3, 1, 3));  // y0 y1 y2 0
+		v0 = _mm_shuffle_ps(v0, v2, BT_SHUFFLE(0, 1, 0, 3));  // x0 x1 x2 0
+		v2 = _mm_shuffle_ps(vT, v2, BT_SHUFFLE(0, 1, 2, 3));  // z0 z1 z2 0
 
 		vm[0] = v0;
 		vm[1] = v1;
@@ -1050,9 +1050,9 @@ btMatrix3x3::transpose() const
 	vT = _mm_unpackhi_ps(v0, v1);  //	z0 z1 * *
 	v0 = _mm_unpacklo_ps(v0, v1);  //	x0 x1 y0 y1
 
-	v1 = _mm_shuffle_ps(v0, v2, BT_SHUFFLE(2, 3, 1, 3));                    // y0 y1 y2 0
-	v0 = _mm_shuffle_ps(v0, v2, BT_SHUFFLE(0, 1, 0, 3));                    // x0 x1 x2 0
-	v2 = _mm_shuffle_ps(vT, v2, BT_SHUFFLE(0, 1, 2, 3));	// z0 z1 z2 0
+	v1 = _mm_shuffle_ps(v0, v2, BT_SHUFFLE(2, 3, 1, 3));  // y0 y1 y2 0
+	v0 = _mm_shuffle_ps(v0, v2, BT_SHUFFLE(0, 1, 0, 3));  // x0 x1 x2 0
+	v2 = _mm_shuffle_ps(vT, v2, BT_SHUFFLE(0, 1, 2, 3));  // z0 z1 z2 0
 
 	return btMatrix3x3(v0, v1, v2);
 #elif defined(BT_USE_NEON)

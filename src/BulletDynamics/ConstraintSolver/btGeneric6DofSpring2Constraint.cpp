@@ -843,9 +843,12 @@ int btGeneric6DofSpring2Constraint::get_limit_motor_info2(
 			if (m_rbB.getInvMass()) mB = mB * rrB + 1 / (m_rbB.getInvInertiaTensorWorld() * ax1).length();
 		}
 		btScalar m;
-		if (m_rbA.getInvMass() == 0) m = mB; else
-		if (m_rbB.getInvMass() == 0) m = mA; else
-			m = mA*mB / (mA + mB);
+		if (m_rbA.getInvMass() == 0)
+			m = mB;
+		else if (m_rbB.getInvMass() == 0)
+			m = mA;
+		else
+			m = mA * mB / (mA + mB);
 		btScalar angularfreq = btSqrt(ks / m);
 
 		//limit stiffness (the spring should not be sampled faster that the quarter of its angular frequency)

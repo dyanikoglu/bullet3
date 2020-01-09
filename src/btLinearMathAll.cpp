@@ -11,4 +11,3 @@
 #include "LinearMath/TaskScheduler/btTaskScheduler.cpp"
 #include "LinearMath/TaskScheduler/btThreadSupportPosix.cpp"
 #include "LinearMath/TaskScheduler/btThreadSupportWin32.cpp"
-

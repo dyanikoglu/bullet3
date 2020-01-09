@@ -473,7 +473,7 @@ int MultiBodyTree::MultiBodyImpl::calculateKinematics(const vecx &q, const vecx 
 			body.m_parent_acc_rel = body.m_body_T_parent.transpose() * body.m_parent_acc_rel;
 		}
 	}
-	
+
 	for (idArrayIdx i = 0; i < m_body_spherical_list.size(); i++)
 	{
 		//todo: review
@@ -482,14 +482,14 @@ int MultiBodyTree::MultiBodyImpl::calculateKinematics(const vecx &q, const vecx 
 		mat33 T;
 
 		T = transformX(q(body.m_q_index)) *
-				transformY(q(body.m_q_index + 1)) *
-				transformZ(q(body.m_q_index + 2));
+			transformY(q(body.m_q_index + 1)) *
+			transformZ(q(body.m_q_index + 2));
 		body.m_body_T_parent = T * body.m_body_T_parent_ref;
-			
-		body.m_parent_pos_parent_body(0)=0;
-		body.m_parent_pos_parent_body(1)=0;
-		body.m_parent_pos_parent_body(2)=0;
-		
+
+		body.m_parent_pos_parent_body(0) = 0;
+		body.m_parent_pos_parent_body(1) = 0;
+		body.m_parent_pos_parent_body(2) = 0;
+
 		body.m_parent_pos_parent_body = body.m_body_T_parent * body.m_parent_pos_parent_body;
 
 		if (type >= POSITION_VELOCITY)
@@ -853,10 +853,10 @@ int MultiBodyTree::MultiBodyImpl::calculateMassMatrix(const vecx &q, const bool 
 				transformZ(q(body.m_q_index + 2));
 			body.m_body_T_parent = T * body.m_body_T_parent_ref;
 
-			body.m_parent_pos_parent_body(0)=0;
-			body.m_parent_pos_parent_body(1)=0;
-			body.m_parent_pos_parent_body(2)=0;
-			
+			body.m_parent_pos_parent_body(0) = 0;
+			body.m_parent_pos_parent_body(1) = 0;
+			body.m_parent_pos_parent_body(2) = 0;
+
 			body.m_parent_pos_parent_body = body.m_body_T_parent * body.m_parent_pos_parent_body;
 		}
 	}

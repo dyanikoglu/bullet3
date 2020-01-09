@@ -56,7 +56,7 @@ btPersistentManifold* btCollisionDispatcherMt::getNewManifold(const btCollisionO
 		}
 	}
 	btPersistentManifold* manifold = new (mem) btPersistentManifold(body0, body1, 0, contactBreakingThreshold, contactProcessingThreshold);
-	if(m_manifoldMutex.tryLock())
+	if (m_manifoldMutex.tryLock())
 	{
 		manifold->m_index1a = m_manifoldsPtr.size();
 		m_manifoldsPtr.push_back(manifold);
@@ -69,7 +69,7 @@ btPersistentManifold* btCollisionDispatcherMt::getNewManifold(const btCollisionO
 void btCollisionDispatcherMt::releaseManifold(btPersistentManifold* manifold)
 {
 	clearManifold(manifold);
-	if(m_manifoldsPtr.size() > 0 && m_manifoldMutex.tryLock())
+	if (m_manifoldsPtr.size() > 0 && m_manifoldMutex.tryLock())
 	{
 		const int findIndex = manifold->m_index1a;
 		btAssert(findIndex < m_manifoldsPtr.size());
@@ -104,7 +104,7 @@ struct CollisionDispatcherUpdater : public btIParallelForBody
 		mDispatcher = NULL;
 		mInfo = NULL;
 	}
-	
+
 	void forLoop(int iBegin, int iEnd) const override
 	{
 		for (int i = iBegin; i < iEnd; ++i)
@@ -122,7 +122,7 @@ void btCollisionDispatcherMt::dispatchAllCollisionPairs(btOverlappingPairCache* 
 	{
 		return;
 	}
-	
+
 	CollisionDispatcherUpdater updater;
 	updater.mCallback = getNearCallback();
 	updater.mPairArray = pairCache->getOverlappingPairArrayPtr();
