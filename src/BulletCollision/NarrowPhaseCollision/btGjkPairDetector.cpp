@@ -713,7 +713,13 @@ void btGjkPairDetector::getClosestPointsNonVirtual(const ClosestPointInput &inpu
 
 	m_curIter = 0;
 	int gGjkMaxIter = 1000;  //this is to catch invalid input, perhaps check for #NaN?
-	m_cachedSeparatingAxis.setValue(0, 1, 0);
+
+	// Warm start cached separating axis
+	//m_cachedSeparatingAxis = localTransA.getOrigin() - localTransB.getOrigin();
+	if (m_cachedSeparatingAxis.length2() > SIMD_EPSILON)
+		m_cachedSeparatingAxis.normalize();
+	else
+		m_cachedSeparatingAxis.setValue(0, 1, 0);
 
 	bool isValid = false;
 	bool checkSimplex = false;

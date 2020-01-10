@@ -45,6 +45,9 @@ class btConvexConvexAlgorithm : public btActivatingCollisionAlgorithm
 #endif
 	btConvexPenetrationDepthSolver* m_pdSolver;
 
+	///cache separating vector to speedup collision detection
+	btVector3   m_cachedSeparatingAxis;
+	
 	btVertexArray worldVertsB1;
 	btVertexArray worldVertsB2;
 
