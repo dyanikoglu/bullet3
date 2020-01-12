@@ -8153,7 +8153,7 @@ bool PhysicsServerCommandProcessor::processLoadSoftBodyCommand(const struct Shar
                 {
                     spring_bending_stiffness = clientCmd.m_loadSoftBodyArguments.m_springBendingStiffness;
                 }
-				btDeformableLagrangianForce* springForce = new btDeformableMassSpringForce(spring_elastic_stiffness, spring_damping_stiffness, false, spring_bending_stiffness);
+				btDeformableLagrangianForce* springForce = new btDeformableMassSpringForce(spring_elastic_stiffness, spring_damping_stiffness, true, spring_bending_stiffness);
 				deformWorld->addForce(psb, springForce);
 				m_data->m_lf.push_back(springForce);
 			}
@@ -9353,6 +9353,15 @@ bool PhysicsServerCommandProcessor::processSendPhysicsParametersCommand(const st
 		if (deformWorld)
 		{
 			deformWorld->getWorldInfo().m_gravity = grav;
+			for (int i = 0; i < m_data->m_lf.size(); ++i)
+			{
+				btDeformableLagrangianForce* force = m_data->m_lf[i];
+				if (force->getForceType() == BT_GRAVITY_FORCE)
+				{
+					btDeformableGravityForce* gforce = (btDeformableGravityForce*)force;
+					gforce->m_gravity = grav;
+				}
+			}
 		}
 		
 
@@ -10544,7 +10553,7 @@ bool PhysicsServerCommandProcessor::processRemoveBodyCommand(const struct Shared
 				{
 					if (m_data->m_pluginManager.getRenderInterface())
 					{
-						m_data->m_pluginManager.getRenderInterface()->removeVisualShape(bodyHandle->m_multiBody->getBaseCollider()->getBroadphaseHandle()->getUid());
+						m_data->m_pluginManager.getRenderInterface()->removeVisualShape(bodyHandle->m_multiBody->getBaseCollider()->getUserIndex3());
 					}
 					m_data->m_dynamicsWorld->removeCollisionObject(bodyHandle->m_multiBody->getBaseCollider());
 					int graphicsIndex = bodyHandle->m_multiBody->getBaseCollider()->getUserIndex();
@@ -10558,7 +10567,7 @@ bool PhysicsServerCommandProcessor::processRemoveBodyCommand(const struct Shared
 					{
 						if (m_data->m_pluginManager.getRenderInterface())
 						{
-							m_data->m_pluginManager.getRenderInterface()->removeVisualShape(bodyHandle->m_multiBody->getLink(link).m_collider->getBroadphaseHandle()->getUid());
+							m_data->m_pluginManager.getRenderInterface()->removeVisualShape(bodyHandle->m_multiBody->getLink(link).m_collider->getUserIndex3());
 						}
 						m_data->m_dynamicsWorld->removeCollisionObject(bodyHandle->m_multiBody->getLink(link).m_collider);
 						int graphicsIndex = bodyHandle->m_multiBody->getLink(link).m_collider->getUserIndex();
@@ -10578,7 +10587,7 @@ bool PhysicsServerCommandProcessor::processRemoveBodyCommand(const struct Shared
 			{
 				if (m_data->m_pluginManager.getRenderInterface())
 				{
-					m_data->m_pluginManager.getRenderInterface()->removeVisualShape(bodyHandle->m_rigidBody->getBroadphaseHandle()->getUid());
+					m_data->m_pluginManager.getRenderInterface()->removeVisualShape(bodyHandle->m_rigidBody->getUserIndex3());
 				}
 				serverCmd.m_removeObjectArgs.m_bodyUniqueIds[serverCmd.m_removeObjectArgs.m_numBodies++] = bodyUniqueId;
 
@@ -10602,7 +10611,7 @@ bool PhysicsServerCommandProcessor::processRemoveBodyCommand(const struct Shared
 				btSoftBody* psb = bodyHandle->m_softBody;
 				if (m_data->m_pluginManager.getRenderInterface())
 				{
-					m_data->m_pluginManager.getRenderInterface()->removeVisualShape(psb->getBroadphaseHandle()->getUid());
+					m_data->m_pluginManager.getRenderInterface()->removeVisualShape(psb->getUserIndex3());
 				}
 				serverCmd.m_removeObjectArgs.m_bodyUniqueIds[serverCmd.m_removeObjectArgs.m_numBodies++] = bodyUniqueId;
 				btSoftMultiBodyDynamicsWorld* softWorld = getSoftWorld();

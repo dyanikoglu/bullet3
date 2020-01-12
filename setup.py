@@ -491,7 +491,7 @@ if 'BT_USE_EGL' in EGL_CXX_FLAGS:
 
 setup(
     name='pybullet',
-    version='2.6.2',
+    version='2.6.3',
     description=
     'Official Python Interface for the Bullet Physics SDK specialized for Robotics Simulation and Reinforcement Learning',
     long_description=
@@ -516,7 +516,8 @@ setup(
         'Operating System :: MacOS', 'Intended Audience :: Science/Research',
         "Programming Language :: Python", 'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.4', 'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6', 'Topic :: Games/Entertainment :: Simulation',
+        'Programming Language :: Python :: 3.6', 'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8', 'Topic :: Games/Entertainment :: Simulation',
         'Topic :: Scientific/Engineering :: Artificial Intelligence',
         'Framework :: Robot Framework'
     ],
