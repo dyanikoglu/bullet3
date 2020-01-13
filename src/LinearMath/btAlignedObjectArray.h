@@ -38,19 +38,21 @@ subject to the following restrictions:
 #include <new>  //for placement new
 #endif          //BT_USE_PLACEMENT_NEW
 
+#include "btPdqsort.h"
+
 ///The btAlignedObjectArray template class uses a subset of the stl::vector interface for its methods
 ///It is developed to replace stl::vector to avoid portability issues, including STL alignment issues to add SIMD/SSE data
 template <typename T>
 //template <class T>
-class btAlignedObjectArray
+class btAlignedObjectArray: public 	btAlignedAllocator<T, 16>
 {
-	btAlignedAllocator<T, 16> m_allocator;
+	using Alloc = btAlignedAllocator<T, 16>;
 
 	int m_size;
-	int m_capacity;
+	int m_capacity; //if negative, it indicates we do not own the memory
 	T* m_data;
-	//PCK: added this line
-	bool m_ownsMemory;
+
+	bool OwnsMemory()const { return m_capacity >= 0; }
 
 #ifdef BT_ALLOW_ARRAY_COPY_OPERATOR
 public:
@@ -82,8 +84,8 @@ protected:
 
 	SIMD_FORCE_INLINE void init()
 	{
-		//PCK: added this line
-		m_ownsMemory = true;
+		// PCK: added this line
+		// m_ownsMemory = true;
 		m_data = 0;
 		m_size = 0;
 		m_capacity = 0;
@@ -100,7 +102,7 @@ protected:
 	SIMD_FORCE_INLINE void* allocate(int size)
 	{
 		if (size)
-			return m_allocator.allocate(size);
+			return Alloc::allocate(size);
 		return 0;
 	}
 
@@ -109,15 +111,17 @@ protected:
 		if (m_data)
 		{
 			//PCK: enclosed the deallocation in this block
-			if (m_ownsMemory)
+			if (OwnsMemory())
 			{
-				m_allocator.deallocate(m_data);
+				Alloc::deallocate(m_data);
 			}
 			m_data = 0;
 		}
 	}
 
 public:
+	T * data() { return m_data; }
+	
 	btAlignedObjectArray()
 	{
 		init();
@@ -274,7 +278,7 @@ public:
 	/// return the pre-allocated (reserved) elements, this is at least as large as the total number of elements,see size() and reserve()
 	SIMD_FORCE_INLINE int capacity() const
 	{
-		return m_capacity;
+		return abs(m_capacity);
 	}
 
 	SIMD_FORCE_INLINE void reserve(int _Count)
@@ -289,8 +293,8 @@ public:
 
 			deallocate();
 
-			//PCK: added this line
-			m_ownsMemory = true;
+			// PCK: added this line
+			// m_ownsMemory = true;
 
 			m_data = s;
 
@@ -343,7 +347,8 @@ public:
 		//don't sort 0 or 1 elements
 		if (size() > 1)
 		{
-			quickSortInternal(CompareFunc, 0, size() - 1);
+			// quickSortInternal(CompareFunc,0,size()-1);
+			pdqsort(this->m_data, this->m_data + size(), CompareFunc);
 		}
 	}
 
@@ -451,24 +456,6 @@ public:
 		return index;
 	}
 
-	// If the key is not in the array, return -1 instead of 0,
-	// since 0 also means the first element in the array.
-	int findLinearSearch2(const T& key) const
-	{
-		int index = -1;
-		int i;
-
-		for (i = 0; i < size(); i++)
-		{
-			if (m_data[i] == key)
-			{
-				index = i;
-				break;
-			}
-		}
-		return index;
-	}
-
 	void removeAtIndex(int index)
 	{
 		if (index < size())
@@ -487,10 +474,9 @@ public:
 	void initializeFromBuffer(void* buffer, int size, int capacity)
 	{
 		clear();
-		m_ownsMemory = false;
 		m_data = (T*)buffer;
 		m_size = size;
-		m_capacity = capacity;
+		m_capacity = -capacity; // negative means we do not own it
 	}
 
 	void copyFromArray(const btAlignedObjectArray& otherArray)

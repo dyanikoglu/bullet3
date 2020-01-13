@@ -38,6 +38,7 @@ SET(LinearMath_HDRS
 	btImplicitQRSVD.h
 	btMinMax.h
 	btMotionState.h
+	btPdqsort.h
 	btPolarDecomposition.h
 	btPoolAllocator.h
 	btQuadWord.h
