@@ -15,6 +15,7 @@ subject to the following restrictions:
 #include "btThreads.h"
 #include "btQuickprof.h"
 #include <algorithm>  // for min and max
+#include <Windows.h>
 
 #if BT_USE_OPENMP && BT_THREADSAFE
 
@@ -73,6 +74,31 @@ subject to the following restrictions:
 
 #endif
 
+//
+// Lightweight CPU-level sleep and event functions that does'nt trigger context switches
+// but helps to reduce CPU stalls and saves energy.
+//
+
+inline void btSpinPause() {
+#if defined( _MSC_VER )
+    // YieldProcessor() - yields current thread (on x86 it's same "pause" instruction)
+    YieldProcessor();
+#elif defined( __GNUC__ ) && (defined( __i386__ ) || defined( __amd64__ ))
+    // pause - frees up core resources to another thread on HT enabled CPUs (about 9 CPU clocks)
+    __asm volatile ("pause" ::: "memory");
+#elif defined( __GNUC__ ) && defined( __arm__ )
+    // wfe - core enters "wait for event" state (energy saving)
+    __asm volatile ("wfe" ::: "memory");
+#endif
+}
+
+inline void btSpinEvent() {
+#if defined( __GNUC__ ) && defined( __arm__ )
+    // sev - sends event to other cores
+    __asm volatile ("sev" ::: "memory");
+#endif
+}
+
 #if USE_CPP11_ATOMICS
 
 #include <atomic>
@@ -93,6 +119,7 @@ void btSpinMutex::lock()
 	while (!tryLock())
 	{
 		// spin
+		btSpinPause();
 	}
 }
 
@@ -100,6 +127,7 @@ void btSpinMutex::unlock()
 {
 	std::atomic<int>* aDest = reinterpret_cast<std::atomic<int>*>(&mLock);
 	std::atomic_store_explicit(aDest, int(0), std::memory_order_release);
+	btSpinEvent();
 }
 
 #elif USE_MSVC_INTRINSICS
@@ -123,6 +151,7 @@ void btSpinMutex::lock()
 	while (!tryLock())
 	{
 		// spin
+		btSpinPause();
 	}
 }
 
@@ -130,6 +159,7 @@ void btSpinMutex::unlock()
 {
 	volatile long* aDest = reinterpret_cast<long*>(&mLock);
 	_InterlockedExchange(aDest, 0);
+	btSpinEvent();
 }
 
 #elif USE_GCC_BUILTIN_ATOMICS
@@ -151,12 +181,14 @@ void btSpinMutex::lock()
 	while (!tryLock())
 	{
 		// spin
+		btSpinPause();
 	}
 }
 
 void btSpinMutex::unlock()
 {
 	__atomic_store_n(&mLock, int(0), __ATOMIC_RELEASE);
+	btSpinEvent();
 }
 
 #elif USE_GCC_BUILTIN_ATOMICS_OLD
@@ -174,6 +206,7 @@ void btSpinMutex::lock()
 	while (!tryLock())
 	{
 		// spin
+		btSpinPause();
 	}
 }
 
@@ -181,6 +214,7 @@ void btSpinMutex::unlock()
 {
 	// write 0
 	__sync_fetch_and_and(&mLock, int(0));
+	btSpinEvent();
 }
 
 #else  //#elif USE_MSVC_INTRINSICS
