@@ -19,7 +19,7 @@ btCylinderShape::btCylinderShape(const btVector3& halfExtents)
 	: btConvexInternalShape(),
 	  m_upAxis(1)
 {
-	btVector3 margin(getMargin(), getMargin(), getMargin());
+	btVector3 margin(btConvexInternalShape::getMargin(), btConvexInternalShape::getMargin(), btConvexInternalShape::getMargin());
 	m_implicitShapeDimensions = (halfExtents * m_localScaling) - margin;
 
 	setSafeMargin(halfExtents);

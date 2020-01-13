@@ -67,7 +67,7 @@ void btContinuousConvexCollision::computeClosestPoints(const btTransform& transA
 		const btVector3& planeNormal = planeShape->getPlaneNormal();
 		const btScalar& planeConstant = planeShape->getPlaneConstant();
 
-		btTransform convexWorldTransform = transA;
+		const btTransform& convexWorldTransform = transA;
 		btTransform convexInPlaneTrans;
 		convexInPlaneTrans = transB.inverse() * convexWorldTransform;
 		btTransform planeInConvex;

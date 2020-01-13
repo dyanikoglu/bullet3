@@ -941,10 +941,7 @@ btScalar btSequentialImpulseConstraintSolverMt::solveSingleIteration(int iterati
 
 	if (infoGlobal.m_solverMode & SOLVER_RANDMIZE_ORDER)
 	{
-		if (1)  // uncomment this for a bit less random ((iteration & 7) == 0)
-		{
-			randomizeConstraintOrdering(iteration, infoGlobal.m_numIterations);
-		}
+		randomizeConstraintOrdering(iteration, infoGlobal.m_numIterations);
 	}
 
 	{

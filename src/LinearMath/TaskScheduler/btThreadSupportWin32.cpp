@@ -157,6 +157,9 @@ void getProcessorInformation(btProcessorInfo* procInfo)
 			case RelationProcessorPackage:
 				procInfo->numPhysicalPackages++;
 				break;
+			default:
+				btAssert(false);
+				break;
 		}
 	}
 	free(buf);

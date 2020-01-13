@@ -838,7 +838,7 @@ void btGjkPairDetector::getClosestPointsNonVirtual(const ClosestPointInput &inpu
 			//printf("not intersect\n");
 		}
 		//printf("dir=%f,%f,%f\n",dir[0],dir[1],dir[2]);
-		if (1)
+		if (true)
 		{
 			for (;;)
 			//while (true)
@@ -1111,7 +1111,7 @@ void btGjkPairDetector::getClosestPointsNonVirtual(const ClosestPointInput &inpu
 	{
 		m_cachedSeparatingAxis = normalInB;
 		m_cachedSeparatingDistance = distance;
-		if (1)
+		if (true)
 		{
 			///todo: need to track down this EPA penetration solver degeneracy
 			///the penetration solver reports penetration but the contact normal

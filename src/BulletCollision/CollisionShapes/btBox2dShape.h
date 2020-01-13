@@ -101,7 +101,7 @@ public:
 			minDimension = boxHalfExtents.getY();
 
 		m_shapeType = BOX_2D_SHAPE_PROXYTYPE;
-		btVector3 margin(getMargin(), getMargin(), getMargin());
+		btVector3 margin(btConvexInternalShape::getMargin(), btConvexInternalShape::getMargin(), btConvexInternalShape::getMargin());
 		m_implicitShapeDimensions = (boxHalfExtents * m_localScaling) - margin;
 
 		setSafeMargin(minDimension);

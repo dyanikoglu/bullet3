@@ -144,7 +144,7 @@ public:
 
 	virtual void serializeSingleShape(btSerializer * serializer) const;
 
-	virtual size_t getByteSize() const { return sizeof(this); }
+	virtual size_t getByteSize() const { return sizeof(*this); }
 };
 
 // clang-format off

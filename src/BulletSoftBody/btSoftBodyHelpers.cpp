@@ -1317,7 +1317,7 @@ btSoftBody* btSoftBodyHelpers::CreateFromVtkFile(btSoftBodyWorldInfo& worldInfo,
 	}
 	btSoftBody* psb = new btSoftBody(&worldInfo, n_points, &X[0], 0);
 
-	for (int i = 0; i < n_tets; ++i)
+	for (int i = 0; static_cast<size_t>(i) < n_tets; ++i)
 	{
 		const Index& ni = indices[i];
 		psb->appendTetra(ni[0], ni[1], ni[2], ni[3]);

@@ -940,7 +940,7 @@ void btDiscreteDynamicsWorld::createPredictiveContactsInternal(btRigidBody** bod
 			btScalar squareMotion = (predictedTrans.getOrigin() - body->getWorldTransform().getOrigin()).length2();
 
 			// TODO: Why is that disabled?
-			if (0 && body->getCollisionShape()->isConvex() && getDispatchInfo().m_useContinuous && body->getCcdSquareMotionThreshold() && body->getCcdSquareMotionThreshold() < squareMotion)
+			if (false && body->getCollisionShape()->isConvex() && getDispatchInfo().m_useContinuous && body->getCcdSquareMotionThreshold() && body->getCcdSquareMotionThreshold() < squareMotion)
 			{
 				BT_PROFILE("predictive convexSweepTest");
 				gNumClampedCcdMotions++;
@@ -1036,7 +1036,7 @@ void btDiscreteDynamicsWorld::integrateTransformsInternal(btRigidBody** bodies, 
 
 			btScalar squareMotion = (predictedTrans.getOrigin() - body->getWorldTransform().getOrigin()).length2();
 
-			if (0 && body->getCollisionShape()->isConvex() && getDispatchInfo().m_useContinuous && body->getCcdSquareMotionThreshold() && body->getCcdSquareMotionThreshold() < squareMotion)
+			if (false && body->getCollisionShape()->isConvex() && getDispatchInfo().m_useContinuous && body->getCcdSquareMotionThreshold() && body->getCcdSquareMotionThreshold() < squareMotion)
 			{
 				BT_PROFILE("CCD motion clamping");
 #ifdef USE_STATIC_ONLY

@@ -923,7 +923,7 @@ void btCollisionWorld::objectQuerySingleInternal(const btConvexShape* castShape,
 					for (i = 0; i < compoundShape->getNumChildShapes(); i++)
 					{
 						const btCollisionShape* childCollisionShape = compoundShape->getChildShape(i);
-						btTransform childTrans = compoundShape->getChildTransform(i);
+						const btTransform& childTrans = compoundShape->getChildTransform(i);
 						callback.ProcessChild(i, childTrans, childCollisionShape);
 					}
 				}
@@ -1319,7 +1319,7 @@ void btCollisionWorld::debugDrawObject(const btTransform& worldTransform, const 
 		const btCompoundShape* compoundShape = static_cast<const btCompoundShape*>(shape);
 		for (int i = compoundShape->getNumChildShapes() - 1; i >= 0; i--)
 		{
-			btTransform childTrans = compoundShape->getChildTransform(i);
+			const btTransform& childTrans = compoundShape->getChildTransform(i);
 			const btCollisionShape* colShape = compoundShape->getChildShape(i);
 			debugDrawObject(worldTransform * childTrans, colShape, color);
 		}

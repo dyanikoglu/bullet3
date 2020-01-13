@@ -21,7 +21,7 @@
 typedef unsigned long long btU64;
 static const int kCacheLineSize = 64;
 
-void btSpinPause()
+inline void btSchedulerSpinPause()
 {
 #if defined(_WIN32)
 	YieldProcessor();
@@ -377,7 +377,7 @@ static void WorkerThreadFunc(void* userPtr)
 		while (jobQueue->isQueueEmpty())
 		{
 			// todo: spin wait a bit to avoid hammering the empty queue
-			btSpinPause();
+			btSchedulerSpinPause();
 			if (localStorage->m_directive->getDirective(threadId) == WorkerThreadDirectives::kGoToSleep)
 			{
 				shouldSleep = true;
@@ -392,10 +392,10 @@ static void WorkerThreadFunc(void* userPtr)
 			{
 				for (int i = 0; i < 50; ++i)
 				{
-					btSpinPause();
-					btSpinPause();
-					btSpinPause();
-					btSpinPause();
+					btSchedulerSpinPause();
+					btSchedulerSpinPause();
+					btSchedulerSpinPause();
+					btSchedulerSpinPause();
 					if (localStorage->m_directive->getDirective(threadId) == WorkerThreadDirectives::kScanForJobs || !jobQueue->isQueueEmpty())
 					{
 						break;
@@ -591,7 +591,7 @@ public:
 			{
 				break;
 			}
-			btSpinPause();
+			btSchedulerSpinPause();
 		}
 	}
 
