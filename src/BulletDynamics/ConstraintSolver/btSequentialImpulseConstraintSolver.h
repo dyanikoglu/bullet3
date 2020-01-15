@@ -62,6 +62,7 @@ protected:
 	btAlignedObjectArray<int> m_orderFrictionConstraintPool;
 	btAlignedObjectArray<btTypedConstraint::btConstraintInfo1> m_tmpConstraintSizesPool;
 	int m_maxOverrideNumSolverIterations;
+	btSolveCallback* m_pSolveCallback;
 	int m_fixedBodyId;
 	// When running solvers on multiple threads, a race condition exists for Kinematic objects that
 	// participate in more than one solver.
@@ -131,7 +132,7 @@ protected:
 	void initSolverBody(btSolverBody * solverBody, btCollisionObject * collisionObject, btScalar timeStep);
 
 	btScalar resolveSingleConstraintRowGeneric(btSolverBody & bodyA, btSolverBody & bodyB, const btSolverConstraint& contactConstraint);
-	btScalar resolveSingleConstraintRowLowerLimit(btSolverBody & bodyA, btSolverBody & bodyB, const btSolverConstraint& contactConstraint);
+	btScalar resolveSingleConstraintRowLowerLimit(btSolverBody & bodyA, btSolverBody & bodyB, const btSolverConstraint& contactConstraint, btManifoldPoint* originalContactPoint);
 	btScalar resolveSplitPenetrationImpulse(btSolverBody & bodyA, btSolverBody & bodyB, const btSolverConstraint& contactConstraint)
 	{
 		return m_resolveSplitPenetrationImpulse(bodyA, bodyB, contactConstraint);
@@ -156,6 +157,9 @@ public:
 
 	virtual btScalar solveGroup(btCollisionObject * *bodies, int numBodies, btPersistentManifold** manifold, int numManifolds, btTypedConstraint** constraints, int numConstraints, const btContactSolverInfo& info, btIDebugDraw* debugDrawer, btDispatcher* dispatcher);
 
+	// TODO: Use new manifold callbacks instead
+	virtual void setSolveCallback(btSolveCallback * callback) { m_pSolveCallback = callback; }
+	
 	///clear internal cached data and reset random seed
 	virtual void reset();
 

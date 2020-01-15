@@ -13,7 +13,11 @@ subject to the following restrictions:
 3. This notice may not be removed or altered from any source distribution.
 */
 
+// Don't allow this on debug builds because there's a bug with edit and continue (will enable SSE on ALL API calls)
+#if defined(BT_USE_SSE) && !defined(BT_DEBUG)
+// Allow SIMD on btVector3 and etc.
 #define BT_USE_SSE_IN_API
+#endif
 
 //#define COMPUTE_IMPULSE_DENOM 1
 //#define BT_ADDITIONAL_DEBUG
@@ -268,9 +272,17 @@ btScalar btSequentialImpulseConstraintSolver::resolveSingleConstraintRowGeneric(
 	return m_resolveSingleConstraintRowGeneric(bodyA, bodyB, c);
 }
 
-btScalar btSequentialImpulseConstraintSolver::resolveSingleConstraintRowLowerLimit(btSolverBody& bodyA, btSolverBody& bodyB, const btSolverConstraint& c)
+btScalar btSequentialImpulseConstraintSolver::resolveSingleConstraintRowLowerLimit(btSolverBody& bodyA, btSolverBody& bodyB, const btSolverConstraint& c, btManifoldPoint* originalContactPoint)
 {
-	return m_resolveSingleConstraintRowLowerLimit(bodyA, bodyB, c);
+	if (m_pSolveCallback)
+		m_pSolveCallback->preSolveContact(&bodyA, &bodyB, originalContactPoint);
+
+	btScalar result = m_resolveSingleConstraintRowLowerLimit(bodyA, bodyB, c);
+
+	if (m_pSolveCallback)
+		m_pSolveCallback->postSolveContact(&bodyA, &bodyB, originalContactPoint);
+
+	return result;
 }
 
 static btScalar gResolveSplitPenetrationImpulse_scalar_reference(
@@ -974,7 +986,7 @@ void btSequentialImpulseConstraintSolver::setupContactConstraint(btSolverConstra
 		}
 		solverConstraint.m_cfm = cfm * solverConstraint.m_jacDiagABInv;
 		solverConstraint.m_lowerLimit = 0;
-		solverConstraint.m_upperLimit = 1e10f;  // TODO: See if we really should disable this
+		solverConstraint.m_upperLimit = 1e10f;
 	}
 }
 
@@ -1606,7 +1618,8 @@ btScalar btSequentialImpulseConstraintSolver::solveSingleIteration(int iteration
 
 				{
 					const btSolverConstraint& solveManifold = m_tmpSolverContactConstraintPool[m_orderTmpConstraintPool[c]];
-					btScalar residual = resolveSingleConstraintRowLowerLimit(m_tmpSolverBodyPool[solveManifold.m_solverBodyIdA], m_tmpSolverBodyPool[solveManifold.m_solverBodyIdB], solveManifold);
+					btScalar residual = resolveSingleConstraintRowLowerLimit(m_tmpSolverBodyPool[solveManifold.m_solverBodyIdA], m_tmpSolverBodyPool[solveManifold.m_solverBodyIdB], solveManifold,
+						static_cast<btManifoldPoint*>(solveManifold.m_originalContactPoint));
 					leastSquaresResidual = btMax(leastSquaresResidual, residual * residual);
 					totalImpulse = solveManifold.m_appliedImpulse;
 				}
@@ -1651,7 +1664,8 @@ btScalar btSequentialImpulseConstraintSolver::solveSingleIteration(int iteration
 			for (j = 0; j < numPoolConstraints; j++)
 			{
 				const btSolverConstraint& solveManifold = m_tmpSolverContactConstraintPool[m_orderTmpConstraintPool[j]];
-				btScalar residual = resolveSingleConstraintRowLowerLimit(m_tmpSolverBodyPool[solveManifold.m_solverBodyIdA], m_tmpSolverBodyPool[solveManifold.m_solverBodyIdB], solveManifold);
+				btScalar residual = resolveSingleConstraintRowLowerLimit(m_tmpSolverBodyPool[solveManifold.m_solverBodyIdA], m_tmpSolverBodyPool[solveManifold.m_solverBodyIdB], solveManifold, 
+					static_cast<btManifoldPoint*>(solveManifold.m_originalContactPoint));
 				leastSquaresResidual = btMax(leastSquaresResidual, residual * residual);
 			}
 
@@ -1784,6 +1798,13 @@ void btSequentialImpulseConstraintSolver::writeBackContacts(int iBegin, int iEnd
 		if ((infoGlobal.m_solverMode & SOLVER_USE_2_FRICTION_DIRECTIONS))
 		{
 			pt->m_appliedImpulseLateral2 = m_tmpSolverContactFrictionConstraintPool[solveManifold.m_frictionIndex + 1].m_appliedImpulse;
+		}
+
+		if (m_pSolveCallback)
+		{
+			m_pSolveCallback->friction(&m_tmpSolverBodyPool[solveManifold.m_solverBodyIdA],
+									   &m_tmpSolverBodyPool[solveManifold.m_solverBodyIdB],
+									   &m_tmpSolverContactFrictionConstraintPool[solveManifold.m_frictionIndex]);
 		}
 	}
 }
