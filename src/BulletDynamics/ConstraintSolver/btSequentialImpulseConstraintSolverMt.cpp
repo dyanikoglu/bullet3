@@ -1016,7 +1016,7 @@ btScalar btSequentialImpulseConstraintSolverMt::resolveMultipleContactConstraint
 		const btSolverConstraint& solveManifold = m_tmpSolverContactConstraintPool[iCons];
 		btSolverBody& bodyA = m_tmpSolverBodyPool[solveManifold.m_solverBodyIdA];
 		btSolverBody& bodyB = m_tmpSolverBodyPool[solveManifold.m_solverBodyIdB];
-		btScalar residual = resolveSingleConstraintRowLowerLimit(bodyA, bodyB, solveManifold);
+		btScalar residual = resolveSingleConstraintRowLowerLimit(bodyA, bodyB, solveManifold, static_cast<btManifoldPoint*>(solveManifold.m_originalContactPoint));
 		leastSquaresResidual += residual * residual;
 	}
 	return leastSquaresResidual;
@@ -1107,7 +1107,8 @@ btScalar btSequentialImpulseConstraintSolverMt::resolveMultipleContactConstraint
 		// apply penetration constraint
 		{
 			const btSolverConstraint& solveManifold = m_tmpSolverContactConstraintPool[iContact];
-			btScalar residual = resolveSingleConstraintRowLowerLimit(m_tmpSolverBodyPool[solveManifold.m_solverBodyIdA], m_tmpSolverBodyPool[solveManifold.m_solverBodyIdB], solveManifold);
+			btScalar residual = resolveSingleConstraintRowLowerLimit(m_tmpSolverBodyPool[solveManifold.m_solverBodyIdA], m_tmpSolverBodyPool[solveManifold.m_solverBodyIdB], solveManifold,
+				static_cast<btManifoldPoint*>(solveManifold.m_originalContactPoint));
 			leastSquaresResidual += residual * residual;
 			totalImpulse = solveManifold.m_appliedImpulse;
 		}

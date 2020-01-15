@@ -58,7 +58,7 @@ public:
 	///solve a group of constraints
 	virtual btScalar solveGroup(btCollisionObject **bodies, int numBodies, btPersistentManifold **manifold, int numManifolds, btTypedConstraint **constraints, int numConstraints, const btContactSolverInfo &info, class btIDebugDraw *debugDrawer, btDispatcher *dispatcher) = 0;
 
-	virtual void setSolveCallback(btSolveCallback *callback){};
+	virtual void setSolveCallback(btSolveCallback * callback) { m_pSolveCallback = callback; }
 
 	virtual void allSolved(const btContactSolverInfo & /* info */, class btIDebugDraw * /* debugDrawer */) { ; }
 
@@ -66,6 +66,9 @@ public:
 	virtual void reset() = 0;
 
 	virtual btConstraintSolverType getSolverType() const = 0;
+
+protected:
+	btSolveCallback* m_pSolveCallback = nullptr;
 };
 
 #endif  //BT_CONSTRAINT_SOLVER_H
