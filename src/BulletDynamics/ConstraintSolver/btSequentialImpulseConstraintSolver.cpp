@@ -694,7 +694,7 @@ btSolverConstraint& btSequentialImpulseConstraintSolver::addTorsionalFrictionCon
 int btSequentialImpulseConstraintSolver::getOrInitSolverBody(btCollisionObject& body, btScalar timeStep)
 {
 // TODO: Add support for callbacks in threadsafe code
-#if 0 && BT_THREADSAFE
+#if BT_THREADSAFE
 	int solverBodyId = -1;
 	bool isRigidBodyType = btRigidBody::upcast(&body) != NULL;
 	if (isRigidBodyType && !body.isStaticOrKinematicObject())
