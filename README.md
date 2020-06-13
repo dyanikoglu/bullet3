@@ -4,11 +4,9 @@ This is a custom version of Bullet Physics SDK, customized to work as Source SDK
 
 ## About Source SDK 2013 Integration
 
-- This repository is used as a dependency in my own private Source SDK 2013 physics engine integration developed under NDA, and based on https://github.com/DrChat/Gmod-vphysics . 
+- This repository is used as a dependency in Source SDK 2013 physics engine integration maintanined by me, and hosted at https://github.com/dyanikoglu/source-sdk-bullet-physics
 
-- GMod vphysics repository is currently outdated, and it's based on a Bullet SDK release before version 2.83. If you're willing to give my repository a try, you can replace the bullet source in gmod vphysics with this one, but I don't guarantee it's going to work without any problem. Bullet SDK got a multithreading rewrite with 2.83 release, and it broke mostly everything about multithreading on gmod-vphysics. You need to replace those classes with new multithreaded classes in Bullet SDK, but this also needs lots of additional changes on `Physics_Environment.cpp`. 
-
-- If you have any questions about Source SDK 2013 integration, you can open an issue in this repository to reach out to me.
+- If you have any questions about Source SDK 2013 integration, you can open an issue in the repository linked above to reach out to me.
 
 ## Requirements
 
